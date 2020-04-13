@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--Bean实例化-->
+    <!--使用无参构造器＋反射构造-->
+    <!--没有name标签的话默认将id作为BeanName-->
+    <bean id = "arvin" name="arvin" class="top.kwseeker.spring.ioc.entity.User" init-method="init" destroy-method="close"/>
+    <!--使用工厂方法构造Bob，首先需要有工厂bean实例，BeanFactory是spring中构造Bean的接口，FactoryBean只是个Bean不过这个Bean是用于创建其他对象的工厂模式-->
+    <bean id="userFactory" class="top.kwseeker.spring.ioc.entity.UserFactory"/>
+    <bean id="bob" factory-bean="userFactory" factory-method="createUser" />
+    <!--上面的工厂bean实现并不是Spring推崇的,定义FactoryBean更好的方式是通过实现FactoryBean<T>接口-->
+    <bean id="objectFactoryBean" class="top.kwseeker.spring.ioc.entity.ObjectFactoryBean"/>
+    <!--静态工厂方法构造对象-->
+    <bean id = "cindy" class="top.kwseeker.spring.ioc.entity.StaticUserFactory" factory-method="createUser"/>
+
+
+    <!--依赖注入-->
+    <!--１ 构造注入-->
+    <bean id="david" class="top.kwseeker.spring.ioc.entity.User">
+        <constructor-arg name="username" value="david"/>
+        <constructor-arg name="age" value="25"/>
+        <!--如果成员变量是对象，使用ref-->
+        <!--<constructor-arg name="xxx" ref="xxx"/>-->
+    </bean>
+    <!--２ setter注入(手动注入，自动注入使用＠Autowired @Resource @Inject)-->
+    <bean id="erik" class="top.kwseeker.spring.ioc.entity.User">
+        <property name="username" value="erik"/>
+        <property name="age" value="24"/>
+    </bean>
+    <!--3 接口注入-->
+    <bean id="program" class="top.kwseeker.spring.ioc.entity.Program"/>
+    <bean id="frank" class="top.kwseeker.spring.ioc.entity.User">
+        <property name="job" ref="program"/>
+    </bean>
+
+    <!-- 注入集合类型 -->
+    <bean id="gloria" class="top.kwseeker.spring.ioc.entity.User">
+        <property name="roles">
+            <set>
+                <value>daughter</value>
+                <value>employer</value>
+            </set>
+        </property>
+    </bean>
+
+</beans>

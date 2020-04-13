@@ -1,6 +1,5 @@
 # project
-*/*.iml
-*/.idea
-*/lib
-*/out
-*/target
+**.iml
+.idea
+**/lib
+**/target
