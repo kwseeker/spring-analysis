@@ -908,7 +908,37 @@ AbstractBeanFactory$doGetBean()
 
 #### 后置处理器
 
+Bean后置处理器允许在调用初始化方法前后对Bean进行额外的处理, Bean后置处理器也是作为bean被装载的。
 
+Spring源码中大量使用到后置处理器，这里分析后置处理器源码中是怎么处理的。
+
+**测试代码**：`top.kwseeker.spring.ioc.postprocessor`
+
+**源码解析**：
+
+以`BeanPostProcessor`实现为例分析处理流程。
+
+```java
+AbstractAutowireCapableBeanFactory$doCreateBean()
+  instanceWrapper = createBeanInstance(beanName, mbd, args);
+  populateBean(beanName, mbd, instanceWrapper);
+  exposedObject = initializeBean(beanName, exposedObject, mbd);
+  	invokeAwareMethods(beanName, bean);
+  	//调用Bean后置处理器的初始化前方法
+  	wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+  	  //getBeanProcessors()方法获取BeanFactory的beanPostProcessors，
+  	  //List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+  	  //这个ArrayList存储所有BeanPostProcessor实现类实例（其实也是Bean）。
+  	  for (BeanPostProcessor beanProcessor : getBeanPostProcessors()) {
+		Object current = beanProcessor.postProcessBeforeInitialization(result, beanName);
+      }
+  	//调用初始化方法
+    invokeInitMethods(beanName, wrappedBean, mbd);
+    //调用Bean后置处理器的初始化后方法，和调用初始化前方法类似
+  	wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+```
+
+以`ConfigurationClassPostProcessor`为例分析处理流程。
 
 #### Bean生命周期管理
 
