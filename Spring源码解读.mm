@@ -63,7 +63,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="3" RULE="ON_BRANCH_CREATION"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="4" RULE="ON_BRANCH_CREATION"/>
 <node TEXT="&#x67b6;&#x6784;&#x56fe;" POSITION="right" ID="ID_806554359" CREATED="1624986149020" MODIFIED="1624986833161" LINK="https://docs.spring.io/spring-framework/docs/5.0.0.RC2/spring-framework-reference/images/spring-overview.png" STYLE="bubble">
 <edge COLOR="#0000ff"/>
 <richcontent TYPE="NOTE">
@@ -212,7 +212,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <richcontent TYPE="DETAILS">
 
@@ -257,9 +256,8 @@
     </p>
   </body>
 </html>
-
 </richcontent>
-<node ID="ID_716150325" CREATED="1625068992891" MODIFIED="1625073908552"><richcontent TYPE="NODE">
+<node ID="ID_716150325" CREATED="1625068992891" MODIFIED="1625312569474"><richcontent TYPE="NODE">
 
 <html>
   <head>
@@ -270,7 +268,7 @@
       <b>2.4,1) </b>Bean&#23454;&#20363;&#21270;&#36890;&#36807;InstantiationStrategy&#25509;&#21475;&#23454;&#29616;
     </p>
     <p>
-      &#26377;&#20004;&#20010;&#23454;&#29616;&#31867;:&#160;SimpleInstantiationStrategy (&#36890;&#36807;&#26500;&#36896;&#20989;&#25968;&#21021;&#22987;&#21270;), CglibSubclassingInstantiationStrategy (&#36890;&#36807;Cglib&#21160;&#24577;&#29983;&#25104;&#23376;&#31867;)
+      &#26377;&#20004;&#20010;&#23454;&#29616;&#31867;:&#160;SimpleInstantiationStrategy (&#36890;&#36807;&#21453;&#23556;&#35843;&#29992;&#26500;&#36896;&#20989;&#25968;&#21021;&#22987;&#21270;), CglibSubclassingInstantiationStrategy (&#36890;&#36807;Cglib&#21160;&#24577;&#29983;&#25104;&#23376;&#31867;&#65292;&#28982;&#21518;&#20877;&#21453;&#23556;&#35843;&#29992;&#26500;&#36896;&#22120;&#23454;&#20363;&#21270;)
     </p>
   </body>
 </html>
@@ -318,8 +316,41 @@
     </p>
   </body>
 </html>
+</richcontent>
+<node TEXT="&#x6240;&#x4ee5;, CglibSubClassingInstantiationStrategy&#x5e76;&#x4e0d;&#x662f;&#x4e3a;&#x4e86;&#x5b9e;&#x4f8b;&#x5316;&#xff0c;&#x800c;&#x8fd8;&#x662f;&#x4e3a;&#x4e86;&#x7c7b;&#x589e;&#x5f3a;(&#x5bf9;&#x90a3;&#x4e9b;&#x9700;&#x8981;&#x589e;&#x5f3a;&#x7684;&#x7c7b;&#x5b9e;&#x4f8b;&#x5316;)" ID="ID_1364751981" CREATED="1625312572892" MODIFIED="1625315380383"><richcontent TYPE="DETAILS">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <font color="#0000c0">PASSTHROUGH / LOOKUP_OVERRIDE /&#160;METHOD_REPLACER</font>
+    </p>
+  </body>
+</html>
 
 </richcontent>
+</node>
+<node TEXT="&#x518d;&#x770b;&#x4e0b;&#x9ed8;&#x8ba4;&#x7684;&#x65b9;&#x6cd5;&#x589e;&#x5f3a;&#x903b;&#x8f91;" ID="ID_1232393781" CREATED="1625315457778" MODIFIED="1625315635175">
+<node TEXT="PASSTHROUGH: &#x4ec0;&#x4e48;&#x90fd;&#x4e0d;&#x505a;&#xff0c;&#x8fd8;&#x662f;&#x539f;&#x6765;&#x7684;&#x65b9;&#x6cd5;" ID="ID_324452565" CREATED="1625315471167" MODIFIED="1625315521817"/>
+<node TEXT="LOOKUP_OVERRIDE: &#x4e3a;&#x4e86;&#x5b9e;&#x73b0;&#x65b9;&#x6cd5;&#x67e5;&#x627e;&#x6ce8;&#x5165;" ID="ID_825539203" CREATED="1625315522623" MODIFIED="1625319752178"><richcontent TYPE="DETAILS">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      &#27604;&#22914;&#19968;&#20010;&#31867;&#22411;&#26377;&#22810;&#20010;&#23454;&#20363;&#65292;&#25105;&#33719;&#21462;&#21738;&#20010;&#23454;&#20363;&#21602;&#65292;&#23601;&#21487;&#20197;&#36890;&#36807;
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+<node TEXT=" METHOD_REPLACER: &#x4e3a;&#x4e86;&#x5b9e;&#x73b0;&#x65b9;&#x6cd5;&#x66ff;&#x6362;&#x6ce8;&#x5165;" ID="ID_1568805637" CREATED="1625315567911" MODIFIED="1625315588894"/>
+</node>
 </node>
 </node>
 </node>
@@ -329,6 +360,43 @@
 <node TEXT="SpEL" ID="ID_413306059" CREATED="1624986601894" MODIFIED="1624986607984" STYLE="bubble"/>
 </node>
 <node TEXT="&#x6d4b;&#x8bd5;" ID="ID_1026135333" CREATED="1624986613390" MODIFIED="1624986619192" STYLE="bubble"/>
+</node>
+<node TEXT="&#x9644;&#x5f55;" POSITION="right" ID="ID_557747893" CREATED="1625297450743" MODIFIED="1625297455918" STYLE="bubble">
+<edge COLOR="#ff00ff"/>
+<node TEXT="Cglib" ID="ID_1138477822" CREATED="1625297458613" MODIFIED="1625297465350" STYLE="bubble">
+<node TEXT="&#x57fa;&#x672c;&#x4f7f;&#x7528;" ID="ID_856830035" CREATED="1625297792408" MODIFIED="1625297965076"><richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      1) &#29983;&#25104;&#26041;&#27861;&#20195;&#29702;&#31867;, <span http-equiv="content-type" content="text/html; charset=utf-8" style="color: rgb(0, 0, 0); font-family: PingFang SC, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 13px; font-style: normal; font-weight: 400; letter-spacing: normal; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; word-spacing: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none"><font color="rgb(0, 0, 0)" face="PingFang SC, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif" size="13px">&#23454;&#29616;MethodInterceptor&#25509;&#21475;; </font></span>
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<node TEXT="Enhancer: &#x4ee3;&#x7406;&#x7c7b;&#x5de5;&#x5382;, &#x7ec4;&#x88c5;&#x539f;&#x751f;&#x7c7b;&#x548c;&#x589e;&#x5f3a;&#x65b9;&#x6cd5;&#x7c7b;&#x751f;&#x6210;&#x4ee3;&#x7406;&#x7c7b;" ID="ID_426790781" CREATED="1625297992930" MODIFIED="1625298085550"/>
+<node TEXT="MethodInterceptor: &#x65b9;&#x6cd5;&#x62e6;&#x622a;&#x5668;&#x63a5;&#x53e3;, &#x5b9a;&#x4e49;&#x62e6;&#x622a;&#x54ea;&#x4e2a;&#x5bf9;&#x8c61;&#x54ea;&#x4e2a;&#x65b9;&#x6cd5;, &#x4ee5;&#x53ca;&#x589e;&#x5f3a;&#x903b;&#x8f91;" ID="ID_612895942" CREATED="1625298088843" MODIFIED="1625298637900"><richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      &#32487;&#25215;Callback&#26631;&#35782;&#25509;&#21475;.
+    </p>
+  </body>
+</html>
+
+</richcontent>
+</node>
+</node>
+<node TEXT="FastClass&#x673a;&#x5236;(&#x901a;&#x8fc7;&#x7d22;&#x5f15;&#x67e5;&#x627e;&#x4ee3;&#x7406;&#x65b9;&#x6cd5;&#x5bf9;&#x5e94;&#x76ee;&#x6807;&#x65b9;&#x6cd5;&#x6267;&#x884c;&#x8c03;&#x7528;)" ID="ID_23121680" CREATED="1625319757670" MODIFIED="1625320715118"/>
+</node>
 </node>
 <node TEXT="&#x53c2;&#x8003;&#x8d44;&#x6599;" POSITION="right" ID="ID_223968736" CREATED="1624985904566" MODIFIED="1624986146667" STYLE="bubble">
 <edge COLOR="#ff0000"/>

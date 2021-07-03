@@ -6,11 +6,11 @@ public class User {
     private int age;
 
     public User(){
-        System.out.println("User Constructor no param");
+        System.out.println("use User Constructor no param");
     }
 
     public User(String name, int age) {
-        System.out.println("User Constructor with param");
+        System.out.println("use User Constructor with param");
         this.name = name;
         this.age = age;
     }
