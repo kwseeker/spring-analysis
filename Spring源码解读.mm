@@ -244,7 +244,7 @@
 </html>
 </richcontent>
 </node>
-<node ID="ID_1671266967" CREATED="1624989097535" MODIFIED="1625069030609"><richcontent TYPE="NODE">
+<node ID="ID_1671266967" CREATED="1624989097535" MODIFIED="1625893383011"><richcontent TYPE="NODE">
 
 <html>
   <head>
@@ -252,12 +252,13 @@
   </head>
   <body>
     <p>
-      <b>2.4)</b>&#160;&#39135;&#26448;&#20934;&#22791;&#23436;&#27605;&#23601;&#24320;&#22987;&#28903;&#33756;( Bean&#23454;&#20363;&#21270; )
+      <b>2.4)</b>&#160;&#39135;&#26448;&#20934;&#22791;&#23436;&#27605;&#23601;&#24320;&#22987;&#28903;&#33756;( Bean&#23454;&#20363;&#21270;&amp;&#21021;&#22987;&#21270; )
     </p>
   </body>
 </html>
+
 </richcontent>
-<node ID="ID_716150325" CREATED="1625068992891" MODIFIED="1625312569474"><richcontent TYPE="NODE">
+<richcontent TYPE="NOTE">
 
 <html>
   <head>
@@ -265,10 +266,45 @@
   </head>
   <body>
     <p>
-      <b>2.4,1) </b>Bean&#23454;&#20363;&#21270;&#36890;&#36807;InstantiationStrategy&#25509;&#21475;&#23454;&#29616;
+      &#20855;&#20307;&#23454;&#29616;&#22312;AbstractAutowireCapableBeanFactory&#25277;&#35937;&#31867;
     </p>
     <p>
-      &#26377;&#20004;&#20010;&#23454;&#29616;&#31867;:&#160;SimpleInstantiationStrategy (&#36890;&#36807;&#21453;&#23556;&#35843;&#29992;&#26500;&#36896;&#20989;&#25968;&#21021;&#22987;&#21270;), CglibSubclassingInstantiationStrategy (&#36890;&#36807;Cglib&#21160;&#24577;&#29983;&#25104;&#23376;&#31867;&#65292;&#28982;&#21518;&#20877;&#21453;&#23556;&#35843;&#29992;&#26500;&#36896;&#22120;&#23454;&#20363;&#21270;)
+      
+    </p>
+    <p>
+      protected BeanWrapper <b>createBeanInstance</b>(String beanName, RootBeanDefinition mbd, @Nullable Object[] args)
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      protected void <b>populateBean</b>(String beanName, RootBeanDefinition mbd, @Nullable BeanWrapper bw)
+    </p>
+    <p>
+      &#160;&#160;&#160;&#160;protected void <b>applyPropertyValues</b>(String beanName, BeanDefinition mbd, BeanWrapper bw, PropertyValues pvs) {}
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      protected Object <b>initializeBean</b>(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd)
+    </p>
+    <p>
+      
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<node ID="ID_716150325" CREATED="1625068992891" MODIFIED="1625894687418"><richcontent TYPE="NODE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <b>2.4.1) </b>Bean<b>&#23454;&#20363;&#21270;</b>(<b>createBeanInstance</b>)&#36890;&#36807;InstantiationStrategy&#25509;&#21475;&#23454;&#29616;, &#26377;&#20004;&#20010;&#23454;&#29616;&#31867;:&#160;SimpleInstantiationStrategy (&#36890;&#36807;&#21453;&#23556;&#35843;&#29992;&#26500;&#36896;&#20989;&#25968;&#21021;&#22987;&#21270;), CglibSubclassingInstantiationStrategy (&#36890;&#36807;Cglib&#21160;&#24577;&#29983;&#25104;&#23376;&#31867;&#65292;&#28982;&#21518;&#20877;&#21453;&#23556;&#35843;&#29992;&#26500;&#36896;&#22120;&#23454;&#20363;&#21270;)
     </p>
   </body>
 </html>
@@ -316,8 +352,23 @@
     </p>
   </body>
 </html>
+
 </richcontent>
-<node TEXT="&#x6240;&#x4ee5;, CglibSubClassingInstantiationStrategy&#x5e76;&#x4e0d;&#x662f;&#x4e3a;&#x4e86;&#x5b9e;&#x4f8b;&#x5316;&#xff0c;&#x800c;&#x8fd8;&#x662f;&#x4e3a;&#x4e86;&#x7c7b;&#x589e;&#x5f3a;(&#x5bf9;&#x90a3;&#x4e9b;&#x9700;&#x8981;&#x589e;&#x5f3a;&#x7684;&#x7c7b;&#x5b9e;&#x4f8b;&#x5316;)" ID="ID_1364751981" CREATED="1625312572892" MODIFIED="1625315380383"><richcontent TYPE="DETAILS">
+<richcontent TYPE="DETAILS">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <font color="#0000c0">&#36820;&#22238;BeanWrapper&#23454;&#20363;(Bean&#23454;&#20363;&#21644;&#20462;&#39280;&#36923;&#36753;&#30340;&#32452;&#21512;)</font>
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<node TEXT="&#x6240;&#x4ee5;, CglibSubClassingInstantiationStrategy&#x5e76;&#x4e0d;&#x662f;&#x4e3a;&#x4e86;&#x5b9e;&#x4f8b;&#x5316;(&#x5b9e;&#x4f8b;&#x5316;&#x662f;&#x7236;&#x7c7b;&#x5b8c;&#x6210;&#x7684;)&#xff0c;&#x8fd8;&#x662f;&#x4e3a;&#x4e86;&#x7c7b;&#x589e;&#x5f3a;(&#x5bf9;&#x90a3;&#x4e9b;&#x9700;&#x8981;&#x589e;&#x5f3a;&#x7684;&#x7c7b;&#x5b9e;&#x4f8b;&#x5316;)" ID="ID_1364751981" CREATED="1625312572892" MODIFIED="1625893491668"><richcontent TYPE="DETAILS">
 
 <html>
   <head>
@@ -329,12 +380,11 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 <node TEXT="&#x518d;&#x770b;&#x4e0b;&#x9ed8;&#x8ba4;&#x7684;&#x65b9;&#x6cd5;&#x589e;&#x5f3a;&#x903b;&#x8f91;" ID="ID_1232393781" CREATED="1625315457778" MODIFIED="1625315635175">
 <node TEXT="PASSTHROUGH: &#x4ec0;&#x4e48;&#x90fd;&#x4e0d;&#x505a;&#xff0c;&#x8fd8;&#x662f;&#x539f;&#x6765;&#x7684;&#x65b9;&#x6cd5;" ID="ID_324452565" CREATED="1625315471167" MODIFIED="1625315521817"/>
-<node TEXT="LOOKUP_OVERRIDE: &#x4e3a;&#x4e86;&#x5b9e;&#x73b0;&#x65b9;&#x6cd5;&#x67e5;&#x627e;&#x6ce8;&#x5165;" ID="ID_825539203" CREATED="1625315522623" MODIFIED="1625319752178"><richcontent TYPE="DETAILS">
+<node TEXT="LOOKUP_OVERRIDE: &#x4e3a;&#x4e86;&#x5b9e;&#x73b0;&#x65b9;&#x6cd5;&#x67e5;&#x627e;&#x6ce8;&#x5165;" ID="ID_825539203" CREATED="1625315522623" MODIFIED="1625762233345"><richcontent TYPE="DETAILS">
 
 <html>
   <head>
@@ -342,15 +392,119 @@
   </head>
   <body>
     <p>
-      &#27604;&#22914;&#19968;&#20010;&#31867;&#22411;&#26377;&#22810;&#20010;&#23454;&#20363;&#65292;&#25105;&#33719;&#21462;&#21738;&#20010;&#23454;&#20363;&#21602;&#65292;&#23601;&#21487;&#20197;&#36890;&#36807;
+      <font color="#0000c0">&#27604;&#22914;&#19968;&#20010;&#31867;&#22411;&#26377;&#22810;&#20010;&#23454;&#20363;&#65292;&#25105;&#33719;&#21462;&#21738;&#20010;&#23454;&#20363;&#21602;&#65292;&#23601;&#21487;&#20197;&#36890;&#36807;&#36825;&#31181;&#26041;&#27861;&#26597;&#25214;&#33719;&#21462;&#23545;&#24212;&#23454;&#20363;</font>
+    </p>
+  </body>
+</html>
+</richcontent>
+</node>
+<node TEXT=" METHOD_REPLACER: &#x4e3a;&#x4e86;&#x5b9e;&#x73b0;&#x65b9;&#x6cd5;&#x66ff;&#x6362;&#x6ce8;&#x5165;" ID="ID_1568805637" CREATED="1625315567911" MODIFIED="1625315588894"/>
+</node>
+</node>
+<node ID="ID_390637451" CREATED="1625891372340" MODIFIED="1625894743351" COLOR="#000000"><richcontent TYPE="NODE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <b>2.4.2)</b>&#160;&#33756;&#21697;&#39135;&#26448;&#20462;&#39280;<b>&#160;populateBean</b>
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      &#21518;&#38754;&#28155;&#21152;&#65292;&#20808;&#25226;&#20027;&#27969;&#31243;&#26803;&#29702;&#23436;&#25972;&#12290;
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      AbstractAutowireCapableBeanFactory$populateBean(...)
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<node TEXT="BeanWrapper" ID="ID_1610908459" CREATED="1625891430607" MODIFIED="1625894587279" COLOR="#000000">
+<node TEXT="ConversionService" ID="ID_1832798821" CREATED="1625895556529" MODIFIED="1625895873503" COLOR="#6666ff"/>
+<node TEXT="PropertyEditorRegistrar" ID="ID_692873239" CREATED="1625895857373" MODIFIED="1625895865725" COLOR="#6666ff"/>
+<node TEXT="BeanPostProcessor" ID="ID_1093085091" CREATED="1625891820643" MODIFIED="1625894587277" COLOR="#000000"/>
+<node ID="ID_117167570" CREATED="1625892799392" MODIFIED="1625894597932" COLOR="#000000"><richcontent TYPE="NODE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      &#23646;&#24615;&#20540;&#22312;BeanDefinition&#30340;PropertyValues&#25104;&#21592;&#20013;&#23384;&#20648;<b>applyPropertyValues()</b>&#160; &#23601;&#26159;&#36890;&#36807;&#21453;&#23556;&#35843;&#29992;setter&#26041;&#27861;&#36827;&#34892;&#23646;&#24615;&#36171;&#20540;
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      &#20855;&#20307;&#21442;&#32771;BeanWrapperImpl
+    </p>
+    <p>
+      
+    </p>
+    <p>
+      public void setValue(final @Nullable Object value)
     </p>
   </body>
 </html>
 
 </richcontent>
 </node>
-<node TEXT=" METHOD_REPLACER: &#x4e3a;&#x4e86;&#x5b9e;&#x73b0;&#x65b9;&#x6cd5;&#x66ff;&#x6362;&#x6ce8;&#x5165;" ID="ID_1568805637" CREATED="1625315567911" MODIFIED="1625315588894"/>
 </node>
+</node>
+<node ID="ID_434269439" CREATED="1625762251614" MODIFIED="1625894335286"><richcontent TYPE="NODE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      <b>2.4.2)&#160;</b>Bean&#23454;&#20363;&#21270;&#21518;&#36824;&#38656;&#35201;<b>&#21021;&#22987;&#21270;(initializeBean)</b>
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<richcontent TYPE="NOTE">
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      protected Object <b>initializeBean</b>(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd)
+    </p>
+  </body>
+</html>
+
+</richcontent>
+<node TEXT="" ID="ID_1553005621" CREATED="1625893040349" MODIFIED="1625893040349"/>
 </node>
 </node>
 </node>
@@ -376,7 +530,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 <node TEXT="Enhancer: &#x4ee3;&#x7406;&#x7c7b;&#x5de5;&#x5382;, &#x7ec4;&#x88c5;&#x539f;&#x751f;&#x7c7b;&#x548c;&#x589e;&#x5f3a;&#x65b9;&#x6cd5;&#x7c7b;&#x751f;&#x6210;&#x4ee3;&#x7406;&#x7c7b;" ID="ID_426790781" CREATED="1625297992930" MODIFIED="1625298085550"/>
 <node TEXT="MethodInterceptor: &#x65b9;&#x6cd5;&#x62e6;&#x622a;&#x5668;&#x63a5;&#x53e3;, &#x5b9a;&#x4e49;&#x62e6;&#x622a;&#x54ea;&#x4e2a;&#x5bf9;&#x8c61;&#x54ea;&#x4e2a;&#x65b9;&#x6cd5;, &#x4ee5;&#x53ca;&#x589e;&#x5f3a;&#x903b;&#x8f91;" ID="ID_612895942" CREATED="1625298088843" MODIFIED="1625298637900"><richcontent TYPE="NOTE">
@@ -391,7 +544,6 @@
     </p>
   </body>
 </html>
-
 </richcontent>
 </node>
 </node>

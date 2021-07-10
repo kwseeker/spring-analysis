@@ -25,7 +25,7 @@ public class InstantiationStrategyTest {
     public void testInstantiationStrategy() throws NoSuchMethodException {
         //bean定义
         RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(User.class);
-        //注入属性(即使注入属性这里初始化过程也没用到)
+        //注入属性(即使注入属性实例化过程也没用到)
         rootBeanDefinition.getPropertyValues()
                 .add("name","Arvin")
                 .add("age",18);
