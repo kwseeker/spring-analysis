@@ -37,7 +37,7 @@ set tx_isolation='REPEATABLE-READ';
 set tx_isolation='SERIALIZABLE';
 ```
 
-![](img/事务隔离级别.png)
+![](../img/事务隔离级别.png)
 
 + 脏读
 
@@ -247,7 +247,7 @@ JdkDynamicAopProxy$invoke(Object proxy, Method method, Object[] args)
 
 #### 事务传播机制
 
-![](img/Spring事务传播机制.png)
+![](../img/Spring事务传播机制.png)
 
 ##### 事务传播实现原理
 

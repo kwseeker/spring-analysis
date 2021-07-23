@@ -11,6 +11,7 @@
   <modules>
     <module>spring-module</module>
     <module>spring-mvc</module>
+    <module>utils</module>
   </modules>
   <name>spring-analysis</name>
 
@@ -70,6 +71,12 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>${logback.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

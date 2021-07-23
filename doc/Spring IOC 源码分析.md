@@ -30,7 +30,7 @@ Spring使用DI实现IOC;EJB使用DL实现IOC。
 
 <u>３）从BeanDefinition容器获取Bean信息进行Bean实例化（构造器反射或工厂方法，另外还有一些初始化等等操作）</u>  
 
-![](img/IoC工作原理.png)
+![](../img/IoC工作原理.png)
 
 顶层常用的入口：
 ```java
@@ -55,7 +55,7 @@ XmlBeanFactory
 ### 从一个简单的测试开始
 
 IOC Bean的构建流程:
-![](img/IoC_bean的构建流程.png)
+![](../img/IoC_bean的构建流程.png)
 
 #### 解析XML配置为BeanDefinition
 
@@ -69,7 +69,7 @@ ApplicationContext context = new ClassPathXmlApplicationContext("application.xml
 JedisCluster jedisCluster = (JedisCluster) context.getBean("jedisCluster");
 ```
 ClassPathXmlApplicationContext类图：
-![](img/ClassPathXmlApplicationContext类图.png)
+![](../img/ClassPathXmlApplicationContext类图.png)
 
 然后开始跟代码：  
 ```java
