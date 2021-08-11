@@ -58,7 +58,40 @@ public class AppConfig {
 }
 ```
 
+**生命周期方法执行顺序**
 
+[Combining lifecycle mechanisms](https://docs.spring.io/spring-framework/docs/2.5.x/reference/beans.html#beans-factory-lifecycle-combined-effects)
+
+初始化方法执行顺序：
+
+- Methods annotated with `@PostConstruct`
+- `afterPropertiesSet()` as defined by the `InitializingBean` callback interface
+- A custom configured `init()` method
+
+销毁方法执行顺序：
+
+- Methods annotated with `@PreDestroy`
+- `destroy()` as defined by the `DisposableBean` callback interface
+- A custom configured `destroy()` method
+
+参考： top.kwseeker.spring.config.introduction.ServiceImpl.java
+
+```txt
+# 初始化
+18:32:59.548 [main] DEBUG org.springframework.context.annotation.CommonAnnotationBeanPostProcessor - Invoking init method on bean 'service': public void top.kwseeker.spring.config.introduction.ServiceImpl.postConstructMethod()
+top.kwseeker.spring.config.introduction.ServiceImpl postConstructMethod() ...
+18:32:59.549 [main] DEBUG org.springframework.beans.factory.support.DefaultListableBeanFactory - Invoking afterPropertiesSet() on bean with name 'service'
+top.kwseeker.spring.config.introduction.ServiceImpl afterPropertiesSet() ...
+18:32:59.549 [main] DEBUG org.springframework.beans.factory.support.DefaultListableBeanFactory - Invoking init method  'customInit' on bean with name 'service'
+top.kwseeker.spring.config.introduction.ServiceImpl customInit() ...
+# 销毁
+18:45:24.208 [Thread-0] DEBUG org.springframework.context.annotation.CommonAnnotationBeanPostProcessor - Invoking destroy method on bean 'service': public void top.kwseeker.spring.config.introduction.ServiceImpl.preDestroyMethod()
+top.kwseeker.spring.config.introduction.ServiceImpl preDestroyMethod() ...
+18:45:24.208 [Thread-0] DEBUG org.springframework.beans.factory.support.DisposableBeanAdapter - Invoking destroy() on bean with name 'service'
+top.kwseeker.spring.config.introduction.ServiceImpl destroy() ...
+18:45:24.208 [Thread-0] DEBUG org.springframework.beans.factory.support.DisposableBeanAdapter - Invoking destroy method 'customDestroy' on bean with name 'service'
+top.kwseeker.spring.config.introduction.ServiceImpl customDestroy() ...
+```
 
 
 

@@ -1,8 +1,47 @@
 package top.kwseeker.spring.config.introduction;
 
-public class ServiceImpl implements Service {
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+public class ServiceImpl implements Service, InitializingBean, DisposableBean {
 
     private Repository repository;
+
+    // 1
+    @Override
+    public void customInit () {
+        System.out.println(getClass().getName() + " customInit() ...");
+    }
+    // 2
+    @PostConstruct
+    public void postConstructMethod() {
+        System.out.println(getClass().getName() + " postConstructMethod() ...");
+    }
+    // 3
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(getClass().getName() + " afterPropertiesSet() ...");
+    }
+
+    // 1
+    @Override
+    public void customDestroy () {
+        System.out.println(getClass().getName() + " customDestroy() ...");
+    }
+    // 2
+    @PreDestroy             //对应XML的destroy-method
+    public void preDestroyMethod() {
+        System.out.println(getClass().getName() + " preDestroyMethod() ...");
+    }
+    // 3
+    @Override
+    public void destroy() throws Exception {
+        System.out.println(getClass().getName() + " destroy() ...");
+    }
+
 
     public ServiceImpl(Repository repository) {
         this.repository = repository;
