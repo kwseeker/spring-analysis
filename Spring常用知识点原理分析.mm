@@ -3,7 +3,7 @@
 <node TEXT="Spring&#x5e38;&#x7528;&#x77e5;&#x8bc6;&#x70b9;&#xa;&#x539f;&#x7406;&#x5206;&#x6790;" FOLDED="false" ID="ID_1774839380" CREATED="1626499465875" MODIFIED="1626499501210" STYLE="oval">
 <font SIZE="18"/>
 <hook NAME="MapStyle">
-    <properties edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff" fit_to_viewport="false"/>
+    <properties fit_to_viewport="false" edgeColorConfiguration="#808080ff,#ff0000ff,#0000ffff,#00ff00ff,#ff00ffff,#00ffffff,#7c0000ff,#00007cff,#007c00ff,#7c007cff,#007c7cff,#7c7c00ff"/>
 
 <map_styles>
 <stylenode LOCALIZED_TEXT="styles.root_node" STYLE="oval" UNIFORM_SHAPE="true" VGAP_QUANTITY="24.0 pt">
@@ -63,7 +63,7 @@
 </stylenode>
 </map_styles>
 </hook>
-<hook NAME="AutomaticEdgeColor" COUNTER="4" RULE="ON_BRANCH_CREATION"/>
+<hook NAME="AutomaticEdgeColor" COUNTER="5" RULE="ON_BRANCH_CREATION"/>
 <node TEXT="IoC&#x76f8;&#x5173;" POSITION="right" ID="ID_1425550162" CREATED="1626499541387" MODIFIED="1626499551210" STYLE="bubble">
 <edge COLOR="#ff0000"/>
 <node TEXT="&#x4f5c;&#x7528;&#x57df;" ID="ID_87907505" CREATED="1626500563530" MODIFIED="1626500571515"/>
@@ -78,6 +78,9 @@
 </node>
 <node TEXT="&#x5e38;&#x7528;&#x6ce8;&#x89e3;&#x76f8;&#x5173;" POSITION="right" ID="ID_1034648392" CREATED="1626499867198" MODIFIED="1626499884323" STYLE="bubble">
 <edge COLOR="#ff00ff"/>
+</node>
+<node TEXT="&#x8bbe;&#x8ba1;&#x7406;&#x5ff5;" POSITION="right" ID="ID_1872685964" CREATED="1627065806893" MODIFIED="1627065826156" STYLE="bubble">
+<edge COLOR="#00ffff"/>
 </node>
 </node>
 </map>
