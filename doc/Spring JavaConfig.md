@@ -93,6 +93,14 @@ top.kwseeker.spring.config.introduction.ServiceImpl destroy() ...
 top.kwseeker.spring.config.introduction.ServiceImpl customDestroy() ...
 ```
 
+**Aware接口使用**
+
+JavaConfig中使用没什么特殊的，Spring可以自动解析实现了哪些Aware接口并执行对应的处理。
+
+**指定Bean的作用域**
+
+使用@Bean的scope属性。
+
 
 
 ## 模块化配置

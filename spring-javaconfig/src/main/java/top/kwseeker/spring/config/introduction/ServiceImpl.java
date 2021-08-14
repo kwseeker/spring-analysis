@@ -2,13 +2,21 @@ package top.kwseeker.spring.config.introduction;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 public class ServiceImpl implements Service, InitializingBean, DisposableBean {
 
+    @Autowired
+    private IEncryptor encryptor;
+
     private Repository repository;
+
+    public ServiceImpl(Repository repository) {
+        this.repository = repository;
+    }
 
     // 1
     @Override
@@ -42,13 +50,9 @@ public class ServiceImpl implements Service, InitializingBean, DisposableBean {
         System.out.println(getClass().getName() + " destroy() ...");
     }
 
-
-    public ServiceImpl(Repository repository) {
-        this.repository = repository;
-    }
-
     public void doSomething() {
         System.out.println("do something ...");
         System.out.println(repository.toString());
+        System.out.println(encryptor.toString());
     }
 }

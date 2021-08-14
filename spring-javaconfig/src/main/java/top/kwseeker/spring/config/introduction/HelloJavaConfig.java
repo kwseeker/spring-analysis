@@ -9,6 +9,9 @@ public class HelloJavaConfig {
 
         Service service = context.getBean(Service.class);
         service.doSomething();
+        //Encryptor encryptor1 = context.getBean(Encryptor.class);
+        //Encryptor encryptor2 = context.getBean(Encryptor.class);
+        //assert !encryptor1.equals(encryptor2);
 
         context.registerShutdownHook();
     }
