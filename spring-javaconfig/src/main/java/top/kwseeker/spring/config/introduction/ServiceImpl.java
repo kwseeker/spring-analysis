@@ -9,12 +9,14 @@ import javax.annotation.PreDestroy;
 
 public class ServiceImpl implements Service, InitializingBean, DisposableBean {
 
+    //测试 ScopeProxyMode
     @Autowired
     private IEncryptor encryptor;
 
     private Repository repository;
 
     public ServiceImpl(Repository repository) {
+        System.out.println("exec constructor ...");
         this.repository = repository;
     }
 

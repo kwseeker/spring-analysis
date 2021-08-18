@@ -101,6 +101,37 @@ JavaConfig中使用没什么特殊的，Spring可以自动解析实现了哪些A
 
 使用@Bean的scope属性。
 
+ScopedProxyMode: 作用域代理模式，解决作用域依赖。
+
+**Lookup方法注入**
+
+适合用在单例范围的Bean依赖于原型范围的Bean的情况。
+
+**定制Bean命名**
+
+可以通过CustomBeanNamingStrategy自定义Bean命名策略，并通过setter方法赋值给容器，有需要再看吧。
+
+```java
+ctx.setBeanNamingStrategy(new CustomBeanNamingStrategy());
+```
+
+**FactoryBean的实现**
+
+FactoryBean是一个接口，是用来创建复杂的Bean实例的。注意FactoryBean定义实例化和普通Bean没什么区别，但是getBean时使用FactoryBean的名字，得到的并不是FactoryBean Bean本身，而是FactoryBean的T getObject() throws Exception; 方法实现返回的实例。
+
+如果需要获取FactoryBean Bean本身可以 getBean("&FactoryBeanName")。
+
+```java
+public interface FactoryBean<T> {
+    //返回的对象实例
+    T getObject() throws Exception;
+    //Bean的类型
+    Class<?> getObjectType();
+    //true是单例，false是非单例  在Spring5.0中此方法利用了JDK1.8的新特性变成了default方法，返回true
+    boolean isSingleton();
+}
+```
+
 
 
 ## 模块化配置
