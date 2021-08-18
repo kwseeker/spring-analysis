@@ -23,6 +23,8 @@ ant clean test
 # 代码导入到IDE 略
 ```
 
+
+
 ## 2 @Configuration 配置类编写与使用
 
 ### 2.1 @Configuration
@@ -37,8 +39,8 @@ AnnotationConfigApplicationContext context = new AnnotationConfigApplicationCont
 //如果配置类太多，还可以通过指定package名，由spring自动扫描获取配置类
 //package也可以指定多个
 AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("top.kwseeker.spring.config.introduction");
-//而且还可以通过通配符进行匹配
-
+//而且还可以通过通配符进行匹配（测试失败）
+AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("**/config/introduction/*.class");
 ```
 
 > @Configuration 可以被认为等同于 XML 的 <beans/> 元素。
@@ -141,6 +143,13 @@ public interface FactoryBean<T> {
     boolean isSingleton();
 }
 ```
+
+**类型安全的访问消除歧义**
+
++ **@primary指定多个同类型Bean中的主要Bean**
+
++ **通过byName方式获取Bean**
++ **getBeansOfType() 获取所有此类型的Bean的Map集合**
 
 
 

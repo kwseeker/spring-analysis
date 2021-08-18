@@ -3,6 +3,7 @@ package top.kwseeker.spring.config.introduction;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class HelloJavaConfig {
 
@@ -26,6 +27,12 @@ public class HelloJavaConfig {
 
         HttpService httpService = context.getBean(HttpService.class);
         httpService.requestBaidu();
+
+        Service3 service3 = context.getBean(Service3.class);
+        System.out.println(service3.getName());
+        //获取所有同类型Bean的集合
+        Map<String, Service3> service3Map = context.getBeansOfType(Service3.class);
+        System.out.println(service3Map.toString());
 
         context.registerShutdownHook();
     }

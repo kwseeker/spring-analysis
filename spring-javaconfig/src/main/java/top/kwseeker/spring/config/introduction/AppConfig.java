@@ -28,4 +28,14 @@ public class AppConfig {
     public Repository repository() {
         return new JdbcRepository();
     }
+
+    @Bean
+    @Primary    //使用＠Primary指定使用多个同类型Bean中的哪一个，即使有多个同类型Bean通过byType获取实例也不会报错
+    public Service3 primaryService3() {
+        return new Service3("primary");
+    }
+    @Bean
+    public Service3 backupService3() {
+        return new Service3("backup");
+    }
 }
