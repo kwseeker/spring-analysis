@@ -31,6 +31,16 @@ ant clean test
 
 一个应用中可以使用一个或多个@Configuration注解的类。
 
+```java
+//使用多个@Configuration注解的配置类
+AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class, HttpConfig.class);
+//如果配置类太多，还可以通过指定package名，由spring自动扫描获取配置类
+//package也可以指定多个
+AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("top.kwseeker.spring.config.introduction");
+//而且还可以通过通配符进行匹配
+
+```
+
 > @Configuration 可以被认为等同于 XML 的 <beans/> 元素。
 
 ### 2.2 @Bean

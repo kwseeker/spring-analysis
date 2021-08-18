@@ -1,6 +1,5 @@
 package top.kwseeker.spring.config.introduction;
 
-import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.*;
 
 @Configuration
@@ -23,20 +22,6 @@ public class AppConfig {
     //@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public IEncryptor encryptor() {
         return new Encryptor();
-    }
-
-    /**
-     * FactoryBean的使用
-     * 返回使用工厂Bean getObject() 创建的实例
-     */
-    @Bean
-    public OkHttpClient okHttpClient() {
-        OkHttpClientFactory factory = new OkHttpClientFactory();
-        //Class<?> clazz = factory.getObjectType();
-        //if (clazz != null && clazz.isInstance(bean)) {
-        //    return (OkHttpClient) clazz.cast(bean);
-        //}
-        return factory.getObject();
     }
 
     @Bean
