@@ -2,6 +2,10 @@
 
 [JavaConfig Reference Guide](https://docs.spring.io/spring-javaconfig/docs/1.0.0.M4/reference/htmlsingle/spring-javaconfig-reference.html)
 
+文档比较老，里面有些东西在新版本已经有了较大的改动。
+
+
+
 ## 1 介绍
 
 JavaConfig(Spring Java Configuration) 提供了一种纯Java配置Spring IoC容器的方式（得益于Java 5 引入的注解和泛型）。
@@ -27,7 +31,7 @@ ant clean test
 
 ## 2 @Configuration 配置类编写与使用
 
-### 2.1 @Configuration
+### @Configuration
 
 ＠Configuration注解的类，作为Bean定义源文件。由@Bean 注释的方法组成，这些方法定义了将由 Spring IoC 容器管理的对象的实例化、配置和初始化逻辑。
 
@@ -45,7 +49,7 @@ AnnotationConfigApplicationContext context = new AnnotationConfigApplicationCont
 
 > @Configuration 可以被认为等同于 XML 的 <beans/> 元素。
 
-### 2.2 @Bean
+### @Bean
 
 @Bean 是一个方法级的注解，等同于XML <bean/> 元素。支持<bean/> 提供的大部分属性，例如：init-method、destroy-method、autowiring、lazy-init、dependency-check、depends-on 和 scope。
 
@@ -155,31 +159,76 @@ public interface FactoryBean<T> {
 
 ## 模块化配置
 
+### 跨＠Configuration类引用Bean
+
+可以在一个@Configuration类中通过@Autowired注入另一个@Configuration类中定义的Bean．
+
+也可以在一个@Configuration类中通过@Autowired注入另一个@Configuration类（本身也是实例化为Bean由Spring管理的）．
+
+### @Import聚合多个配置类到一个全局配置类
+
+```java
+@Configuration
+@Import({ DataSourceConfig.class, TransactionConfig.class })
+public class AppConfig {
+		...
+}
+```
+
 
 
 ## 外部值使用
+
+对应新版本应该说的是 @Value 和 @ConfigurationProperties 。
 
 
 
 ## 合并配置格式
 
+JavaConfig 支持和XML配置方式一起使用。
+
+### XML和JavaConfig混用
+
+**XML为主JavaConfig为辅**
+
+只需要引入ConfigurationPostProcessor, 然后就可以处理代码中的@Configuration类。
+
+```xml
+<bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/>
+```
+
+**JavaConfig为主XML为辅**
+
+可以在@Configuration配置类上使用@ImportXml注解导入XML配置。
+
+```
+@ImportXml("classpath:com/company/app/datasource-config.xml")
+```
+
+### 注解驱动配置
+
+**@ComponentScan**
+
+使用@ComponentScan扫描基于＠Component的注解的Bean,　如 @Controller、@Service、@Repository，包括＠Component。
+
 
 
 ## 事务管理支持
 
-
+参考新版本文档。
 
 ## AOP支持
 
-
+参考新版本文档。
 
 ## JMX支持
 
-
+参考新版本文档。
 
 ## 测试支持
 
-
+参考新版本文档。
 
 ## JavaConfig拓展
 
+略。
