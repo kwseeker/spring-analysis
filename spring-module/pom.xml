@@ -16,6 +16,7 @@
         <module>my-ioc</module>
         <module>spring-ioc</module>
         <module>spring-transaction</module>
+        <module>spring-aop</module>
     </modules>
 
     <dependencies>
