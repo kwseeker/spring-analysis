@@ -35,6 +35,8 @@ SpringAOP致力于解决企业级开发中最普遍的AOP（方法织入）。�
 
 SpringAOP切面不能作为其他切面的增强，但是AspectJ是可以的（记得是可以的）。
 
+SpringAOP只能作用与Spring容器中的Bean, 只能作用于Bean的方法（TODO, 从源码理解）。
+
 ### AOP概念
 
 切面、连接点、通知、切点、引入（Introduction）、目标对象、代理、织入。
@@ -142,6 +144,8 @@ SpringAOP切点标识符
 
 
 ### Spring中使用AspectJ案例
+
+可以参考下Spring这些模块源码加深对Spring AOP使用的理解。
 
 
 
