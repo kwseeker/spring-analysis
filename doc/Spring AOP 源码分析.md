@@ -30,6 +30,8 @@
 
 ### Spring AOP 发展
 
+注意Spring AOP属于第二代AOP(动态AOP)。
+
 + **Spring 1.2 基于接口实现AOP**（第一代）
 + **Spring 2.0 schema-base配置（XML配置）实现AOP**（第二代）
 + **Spring 2.0 @AspectJ配置实现AOP**（第二代）
@@ -46,7 +48,23 @@
 
   第二代：`AutoProxyCreator` 自动代理织入
 
-### Spring 1.2 接口配置
+## Spring 1.2 基于接口实现原理
 
 [Spring AOP APIs](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop-api) 这部分官方文档都是讲的这种老式的基于接口实现的AOP的使用方式。
+
+### 使用案例
+
+先看下使用案例，然后思考下如果要自己实现AOP，应该怎么做？
+
+
+
+### 原理分析
+
+
+
+## Spring 2.0 基于配置实现原理
+
+### 使用案例
+
+### 原理分析
 
