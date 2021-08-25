@@ -23,10 +23,14 @@ public class AppConfig {
         return new LogInterceptor();
     }
 
+    @Bean LogInterceptor globalLogInterceptor() {
+        return new LogInterceptor();
+    }
+
     @Bean
     public ProxyFactoryBean calculateProxy(Calculate calculate) {
         ProxyFactoryBean proxyFactory = new ProxyFactoryBean();
-        proxyFactory.setInterceptorNames("logBeforeAdvice", "logInterceptor");
+        proxyFactory.setInterceptorNames("logBeforeAdvice", "logInterceptor", "globalLogInterceptor*");
         proxyFactory.setTarget(calculate);
         return proxyFactory;
     }

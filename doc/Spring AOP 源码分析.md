@@ -56,9 +56,37 @@
 
 先看下使用案例，然后思考下如果要自己实现AOP，应该怎么做？
 
+案例参考：aopapi。
+
+需要使用FactoryBean (ProxyFactoryBean) 的方式创建代理对象。针对每一个需要增强的类都需要创建一个对应的ProxyFactoryBean。
+
 
 
 ### 原理分析
+
+**ProxyFactoryBean 创建AOP代理对象原理**
+
+Spring FactoryBean是通过里面的getObject()方法拿到Bean实例的，看下ProxyFactoryBean的数据结构和getObject()方法。
+
+```java
+public Object getObject() throws BeansException {
+    initializeAdvisorChain();			//初始化Advisor链
+    if (isSingleton()) {
+        return getSingletonInstance();
+    }
+    else {
+        if (this.targetName == null) {
+            logger.warn("Using non-singleton proxies with singleton targets is often undesirable. " +
+                    "Enable prototype proxies by setting the 'targetName' property.");
+        }
+        return newPrototypeInstance();
+    }
+}
+```
+
+**initializeAdvisorChain()** 
+
+ProxyFactoryBean中我们配置了两个通知（一个MethodBeforeAdvice、一个MethodInterceptor(可以理解为环绕通知，继承Advice接口)），然后会遍历这两个通知，通过判断是否有通配符，按照不同方式创建Advice实例，然后决定是加入到全局Advisor还是加入到当前ProxyFactoryBean的advisor责任链中。
 
 
 
