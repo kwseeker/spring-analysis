@@ -99,7 +99,19 @@ SpringAOP切点标识符
 
 + execution 
 
-  匹配方法执行连接点
+  匹配方法执行连接点。
+
+  规范：
+
+  ```java
+  //修饰符 返回值类型 声明类型 函数名(参数列表) 异常类型
+  //修饰符：public private protected
+  //声明类型：包的路径
+  //? 表示是否可以省略（返回值类型不可省、函数名不可省、参数列表不能省）
+  execution(modifiers-pattern? ret-type-pattern declaring-type-pattern?name-pattern(param-pattern) throws-pattern?)
+  ```
+
+  示例：
 
   ```java
   
@@ -107,9 +119,11 @@ SpringAOP切点标识符
 
 + within 
 
-  限制匹配某些类型中的连接点
+  限制匹配某些类型中的方法执行连接点。
 
 + this
+
+  
 
 + target
 
@@ -122,6 +136,14 @@ SpringAOP切点标识符
 + @within
 
 + @annotation
+
+切点合并：可以使用 `&&`、`||`、`!` 合并切点表达式。
+
+```
+
+```
+
+
 
 **定义通知**
 
