@@ -86,9 +86,17 @@ public Object getObject() throws BeansException {
 
 **initializeAdvisorChain()** 
 
-ProxyFactoryBean中我们配置了两个通知（一个MethodBeforeAdvice、一个MethodInterceptor(可以理解为环绕通知，继承Advice接口)），然后会遍历这两个通知，通过判断是否有通配符，按照不同方式创建Advice实例，然后决定是加入到全局Advisor还是加入到当前ProxyFactoryBean的advisor责任链中。
+ProxyFactoryBean中我们配置了两个通知（一个MethodBeforeAdvice、一个MethodInterceptor（可以理解为环绕通知，继承Advice接口）、一个全局通知（通知通配符）），然后会遍历这三个通知，通过判断末尾是否有`*`，按照不同方式创建Advice实例，然后再与PointCut实例结合封装成Advisor(注意Advisor没有被IoC管理)，然后加入到当前ProxyFactoryBean的advisor链（LinkedList）中。
 
+> spring core aop 6.4.6:
+>
+> ProxyFactoryBean setInterceptorNames() 方法可以传递带通配符的拦截器名称，所有与其匹配的Advisor都会加入到ProxyFactoryBean的Advisor链中。（相当于提供了一种简写方式）
 
+疑问：
+
++ Advice为何要Bean实例化？
+
+  
 
 ## Spring 2.0 基于配置实现原理
 
