@@ -1,9 +1,11 @@
-package top.kwseeker.spring.ioc.initialize;
+package top.kwseeker.java.proxy;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.NotFoundException;
 import net.sf.cglib.core.DebuggingClassWriter;
 import net.sf.cglib.proxy.*;
-import org.junit.Test;
 import sun.misc.ProxyGenerator;
 
 import java.io.BufferedOutputStream;
@@ -12,13 +14,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 
-public class CglibUsageTest {
+public class CGLibDynamicProxy {
 
-    /**
-     * 最主要的是Enhancer MethodInterceptor
-     */
-    @Test
-    public void testSimplestCglibEnhance() throws Exception {
+    public static void main(String[] args) {
         //动态代理类输出到文件
         //-Dsun.misc.ProxyGenerator.saveGeneratedFiles=true
         //System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
@@ -50,7 +48,7 @@ public class CglibUsageTest {
         serviceProxy.doService();
         serviceProxy.doService2();
         serviceProxy.getUserInfo();         //TODO 为何带返回值的代理类方法调用会报 cast 类型失败, 错误信息还很奇怪
-                                            //java.lang.ClassCastException: top.kwseeker.spring.ioc.initialize.CglibUsageTest$SomeService$$EnhancerByCGLIB$$a60cd3c7 cannot be cast to top.kwseeker.spring.ioc.initialize.User
+        //java.lang.ClassCastException: top.kwseeker.spring.ioc.initialize.CglibUsageTest$SomeService$$EnhancerByCGLIB$$a60cd3c7 cannot be cast to top.kwseeker.spring.ioc.initialize.User
     }
 
     /**
@@ -108,21 +106,6 @@ public class CglibUsageTest {
             proxy.invokeSuper(object, objects);
             System.out.printf("%s execute time: %d", method.getName(), System.currentTimeMillis() - startTs);
             return object;
-        }
-    }
-
-    static class SomeService {
-
-        public void doService() {
-            System.out.println("service 1 ...");
-        }
-
-        public void doService2() {
-            System.out.println("service 2 ...");
-        }
-
-        public User getUserInfo() {
-            return new User("Arvin", 18);
         }
     }
 }

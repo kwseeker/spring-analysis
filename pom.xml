@@ -13,6 +13,7 @@
     <module>spring-mvc</module>
     <module>utils</module>
     <module>spring-javaconfig</module>
+    <module>java-base</module>
   </modules>
   <name>spring-analysis</name>
 
