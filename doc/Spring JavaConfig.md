@@ -175,6 +175,232 @@ public class AppConfig {
 }
 ```
 
+#### @Import应用
+
+应用参考：spring-javaconfig top.kwseeker.spring.config.importAnno.*
+
+[＠Import API](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/Import.html)
+
+@Import 用于导入的一个或多个组件类 — 通常是 @Configuration 类。
+
+支持导入3种组件类：@Configuration, ImportSelector, ImportBeanDefinitionRegistrar, 还可以直接导入@Component注解的Bean 。
+
+为了方便拓展（如：外部模块通常会提供默认实现，但是业务中可能常常需要重新定制，于是怎么选择自定制的实现而不是默认的实现呢？），自动配置提供了ImportSelector的一个变种: DeferredImportSelector。通过 @ConditionalOnBean 注解判断是否有自定义的实现，有则使用自定义的实现，否则使用默认的实现。
+
+> 条件注解的内容参考Spring Boot源码分析。
+
+#### @Import原理
+
+**DeferredImportSelector原理**
+
+参考 `ConfigurationClassParser$parse(Set<BeanDefinitionHolder> configCandidates)`方法。
+
+如果getImportGroup返回自定义Group, 会调用自定义Group的process方法加载BeanDefinition; 
+如果getImportGroup返回 null, 会调用DefaultDeferredImportSelectorGroup的process方法, 即调用selectImports。
+
+具体处理流程：
+
+```java
+public void parse(Set<BeanDefinitionHolder> configCandidates) {
+    this.deferredImportSelectors = new LinkedList();
+    Iterator var2 = configCandidates.iterator();
+	
+    //遍历处理除了DeferredImportSelectors外导入的组件
+    //处理主要是注册到 configurationClasses (Map<ConfigurationClass, ConfigurationClass>) 用于后置处理
+    //（如果是普通类解析下@PropertySources、如果是配置类看看有没有@ComponentScans、@Import[可能一层层深入进去]）
+    while(var2.hasNext()) {
+        BeanDefinitionHolder holder = (BeanDefinitionHolder)var2.next();
+        BeanDefinition bd = holder.getBeanDefinition();
+
+        try {
+            if (bd instanceof AnnotatedBeanDefinition) {
+                this.parse(((AnnotatedBeanDefinition)bd).getMetadata(), holder.getBeanName());
+            } else if (bd instanceof AbstractBeanDefinition && ((AbstractBeanDefinition)bd).hasBeanClass()) {
+                this.parse(((AbstractBeanDefinition)bd).getBeanClass(), holder.getBeanName());
+            } else {
+                this.parse(bd.getBeanClassName(), holder.getBeanName());
+            }
+        } catch (BeanDefinitionStoreException var6) {
+            throw var6;
+        } catch (Throwable var7) {
+            throw new BeanDefinitionStoreException("Failed to parse configuration class [" + bd.getBeanClassName() + "]", var7);
+        }
+    }
+
+    //由此可见DeferredImportSelectors是在所有配置类中@Bean、@Import导入的@Component、配置类、ImportSelector等都处理完才处理的
+    this.processDeferredImportSelectors();
+}
+```
+
+@Import 导入的类的处理
+
+```java
+//ConfigurationClassParser
+private void processImports(ConfigurationClass configClass, ConfigurationClassParser.SourceClass currentSourceClass, Collection<ConfigurationClassParser.SourceClass> importCandidates, boolean checkForCircularImports) {
+    if (!importCandidates.isEmpty()) {
+        if (checkForCircularImports && this.isChainedImportOnStack(configClass)) {
+            this.problemReporter.error(new ConfigurationClassParser.CircularImportProblem(configClass, this.importStack));
+        } else {
+            this.importStack.push(configClass);
+
+            try {
+                //就是我们测试案例中通过@Import导入的三个类（SourceClass）
+                Iterator var5 = importCandidates.iterator();
+
+                while(true) {
+                    while(true) {
+                        while(var5.hasNext()) {
+                            ConfigurationClassParser.SourceClass candidate = (ConfigurationClassParser.SourceClass)var5.next();
+                            Class candidateClass;
+                            //@Import导入的实现了ImportSelector接口的类
+                            if (candidate.isAssignable(ImportSelector.class)) {
+                                candidateClass = candidate.loadClass();
+                                //1 先反射实例化ImportSelector实现类
+                                ImportSelector selector = (ImportSelector)BeanUtils.instantiateClass(candidateClass, ImportSelector.class);
+                                ParserStrategyUtils.invokeAwareMethods(selector, this.environment, this.resourceLoader, this.registry);
+                                //2 DeferredImportSelector 先加入到List中最后处理，ImportSelector直接处理
+                                if (this.deferredImportSelectors != null && selector instanceof DeferredImportSelector) {
+                                    this.deferredImportSelectors.add(new ConfigurationClassParser.DeferredImportSelectorHolder(configClass, (DeferredImportSelector)selector));
+                                } else {
+                                    String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
+                                    Collection<ConfigurationClassParser.SourceClass> importSourceClasses = this.asSourceClasses(importClassNames);
+                                    this.processImports(configClass, currentSourceClass, importSourceClasses, false);
+                                }
+                            //@Import导入的实现了ImportBeanDefinitionRegistrar接口的类
+                            } else if (candidate.isAssignable(ImportBeanDefinitionRegistrar.class)) {
+                                candidateClass = candidate.loadClass();
+                                ImportBeanDefinitionRegistrar registrar = (ImportBeanDefinitionRegistrar)BeanUtils.instantiateClass(candidateClass, ImportBeanDefinitionRegistrar.class);
+                                ParserStrategyUtils.invokeAwareMethods(registrar, this.environment, this.resourceLoader, this.registry);
+                                configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
+                            //其他类（如@Component）
+                            } else {
+                                this.importStack.registerImport(currentSourceClass.getMetadata(), candidate.getMetadata().getClassName());
+                                this.processConfigurationClass(candidate.asConfigClass(configClass));
+                            }
+                        }
+
+                        return;
+                    }
+                }
+            } catch (BeanDefinitionStoreException var15) {
+                throw var15;
+            } catch (Throwable var16) {
+                throw new BeanDefinitionStoreException("Failed to process import candidates for configuration class [" + configClass.getMetadata().getClassName() + "]", var16);
+            } finally {
+                this.importStack.pop();
+            }
+        }
+    }
+}
+```
+
+初步处理之后 configurationClasses 数据:
+
+```java
+configurationClasses = {LinkedHashMap@1416}  size = 3
+ {ConfigurationClass@2000} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.beans.Person" -> {ConfigurationClass@2000} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.beans.Person"
+  key = {ConfigurationClass@2000} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.beans.Person"
+  value = {ConfigurationClass@2000} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.beans.Person"
+   metadata = {StandardAnnotationMetadata@2005} 
+    annotations = {Annotation[1]@2015} 
+     0 = {$Proxy6@2037} "@org.springframework.stereotype.Component(value=person)"
+    nestedAnnotationsAsMap = true
+    introspectedClass = {Class@1428} "class top.kwseeker.spring.config.importAnno.beans.Person"
+   resource = {DescriptiveResource@2006} "top.kwseeker.spring.config.importAnno.beans.Person"
+   beanName = null
+   importedBy = {LinkedHashSet@2007}  size = 1
+   beanMethods = {LinkedHashSet@2008}  size = 0
+   importedResources = {LinkedHashMap@2009}  size = 0
+   importBeanDefinitionRegistrars = {LinkedHashMap@2010}  size = 0
+   skippedBeanMethods = {HashSet@2011}  size = 0
+ {ConfigurationClass@1795} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.DatabaseConfig" -> {ConfigurationClass@1795} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.DatabaseConfig"
+  key = {ConfigurationClass@1795} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.DatabaseConfig"
+  value = {ConfigurationClass@1795} "ConfigurationClass: beanName 'null', top.kwseeker.spring.config.importAnno.DatabaseConfig"
+   metadata = {StandardAnnotationMetadata@1813} 
+    annotations = {Annotation[1]@1817} 
+     0 = {$Proxy9@2191} "@org.springframework.context.annotation.PropertySource(name=, factory=interface org.springframework.core.io.support.PropertySourceFactory, ignoreResourceNotFound=false, encoding=, value=[classpath:db.properties])"
+    nestedAnnotationsAsMap = true
+    introspectedClass = {Class@1556} "class top.kwseeker.spring.config.importAnno.DatabaseConfig"
+   resource = {DescriptiveResource@2017} "top.kwseeker.spring.config.importAnno.DatabaseConfig"
+   beanName = null
+   importedBy = {LinkedHashSet@2018}  size = 1
+   beanMethods = {LinkedHashSet@2019}  size = 1
+   importedResources = {LinkedHashMap@2020}  size = 0
+   importBeanDefinitionRegistrars = {LinkedHashMap@2021}  size = 0
+   skippedBeanMethods = {HashSet@2022}  size = 0
+ {ConfigurationClass@1667} "ConfigurationClass: beanName 'globalConfig', top.kwseeker.spring.config.importAnno.GlobalConfig" -> {ConfigurationClass@1667} "ConfigurationClass: beanName 'globalConfig', top.kwseeker.spring.config.importAnno.GlobalConfig"
+  key = {ConfigurationClass@1667} "ConfigurationClass: beanName 'globalConfig', top.kwseeker.spring.config.importAnno.GlobalConfig"
+  value = {ConfigurationClass@1667} "ConfigurationClass: beanName 'globalConfig', top.kwseeker.spring.config.importAnno.GlobalConfig"
+   metadata = {StandardAnnotationMetadata@1987} 
+    annotations = {Annotation[2]@2184} 
+     0 = {$Proxy4@2186} "@org.springframework.context.annotation.Configuration(value=)"
+     1 = {$Proxy5@2187} "@org.springframework.context.annotation.Import(value=[class top.kwseeker.spring.config.importAnno.beans.Person, class top.kwseeker.spring.config.importAnno.DatabaseConfig, class top.kwseeker.spring.config.importAnno.service.UserServiceDeferredImportSelector])"
+    nestedAnnotationsAsMap = true
+    introspectedClass = {Class@1561} "class top.kwseeker.spring.config.importAnno.GlobalConfig"
+   resource = {DescriptiveResource@1988} "top.kwseeker.spring.config.importAnno.GlobalConfig"
+   beanName = "globalConfig"
+   importedBy = {LinkedHashSet@1990}  size = 0
+   beanMethods = {LinkedHashSet@1991}  size = 0
+   importedResources = {LinkedHashMap@1992}  size = 0
+   importBeanDefinitionRegistrars = {LinkedHashMap@1993}  size = 0
+   skippedBeanMethods = {HashSet@1994}  size = 0
+knownSuperclasses = {HashMap@1417}  size = 0
+propertySourceNames = {ArrayList@1418}  size = 1
+importStack = {ConfigurationClassParser$ImportStack@1419}  size = 0
+deferredImportSelectors = {LinkedList@1657}  size = 1
+ 0 = {ConfigurationClassParser$DeferredImportSelectorHolder@2196} 
+  configurationClass = {ConfigurationClass@1667} "ConfigurationClass: beanName 'globalConfig', top.kwseeker.spring.config.importAnno.GlobalConfig"
+  importSelector = {UserServiceDeferredImportSelector@2197} 
+```
+
+DeferredImportSelector 处理流程（由下面代码可见，DeferredImportSelector多了排序、分组归类）
+
+```java
+private void processDeferredImportSelectors() {
+    List<ConfigurationClassParser.DeferredImportSelectorHolder> deferredImports = this.deferredImportSelectors;
+    this.deferredImportSelectors = null;
+    if (deferredImports != null) {
+        //排序 TODO
+        deferredImports.sort(DEFERRED_IMPORT_COMPARATOR);
+        Map<Object, ConfigurationClassParser.DeferredImportSelectorGrouping> groupings = new LinkedHashMap();
+        Map<AnnotationMetadata, ConfigurationClass> configurationClasses = new HashMap();
+        Iterator var4 = deferredImports.iterator();
+		//遍历DeferredImportSelector，进行分组归类 TODO
+        while(var4.hasNext()) {
+            ConfigurationClassParser.DeferredImportSelectorHolder deferredImport = (ConfigurationClassParser.DeferredImportSelectorHolder)var4.next();
+            Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
+            ConfigurationClassParser.DeferredImportSelectorGrouping grouping = (ConfigurationClassParser.DeferredImportSelectorGrouping)groupings.computeIfAbsent(group == null ? deferredImport : group, (key) -> {
+                return new ConfigurationClassParser.DeferredImportSelectorGrouping(this.createGroup(group));
+            });
+            grouping.add(deferredImport);
+            configurationClasses.put(deferredImport.getConfigurationClass().getMetadata(), deferredImport.getConfigurationClass());
+        }
+		//
+        var4 = groupings.values().iterator();
+        while(var4.hasNext()) {
+            ConfigurationClassParser.DeferredImportSelectorGrouping grouping = (ConfigurationClassParser.DeferredImportSelectorGrouping)var4.next();
+            grouping.getImports().forEach((entry) -> {
+                ConfigurationClass configurationClass = (ConfigurationClass)configurationClasses.get(entry.getMetadata());
+
+                try {
+                    //递归
+                    this.processImports(configurationClass, this.asSourceClass(configurationClass), this.asSourceClasses(entry.getImportClassName()), false);
+                } catch (BeanDefinitionStoreException var5) {
+                    throw var5;
+                } catch (Throwable var6) {
+                    throw new BeanDefinitionStoreException("Failed to process import candidates for configuration class [" + configurationClass.getMetadata().getClassName() + "]", var6);
+                }
+            });
+        }
+
+    }
+}
+```
+
+还没完，ConfigurationClass List 怎么处理的？
+
+TODO
+
 
 
 ## 外部值使用
