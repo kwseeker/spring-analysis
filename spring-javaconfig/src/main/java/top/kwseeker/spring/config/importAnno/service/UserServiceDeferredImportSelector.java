@@ -5,12 +5,13 @@ import org.springframework.core.type.AnnotationMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 // 如果getImportGroup返回自定义Group, 会调用自定义Group的process方法
 // 如果getImportGroup返回 null, 会调用DefaultDeferredImportSelectorGroup的process方法,即调用selectImports
+// 原理参考：ConfigurationClassParser$processDeferredImportSelectors() 这个方法
 public class UserServiceDeferredImportSelector implements DeferredImportSelector {
 
+    //自定义Bean可以放在这里
     @Override
     public Class<? extends Group> getImportGroup() {
         // 这个返回值决定调用DeferredImportSelector.selectImports  如果null
@@ -18,6 +19,7 @@ public class UserServiceDeferredImportSelector implements DeferredImportSelector
         return  MyGroup.class;
     }
 
+    //默认Bean可以放在这里
     // getImportGroup() 返回 null, 执行这个
     @Override
     public String[] selectImports(AnnotationMetadata annotationMetadata) {
@@ -46,7 +48,7 @@ public class UserServiceDeferredImportSelector implements DeferredImportSelector
             List<Entry> list=new ArrayList<>();
             list.add(new Entry(this.metadata,"top.kwseeker.spring.config.importAnno.service.UserService"));
             list.add(new Entry(this.metadata, "top.kwseeker.spring.config.importAnno.service.Admin"));
-            return  list;
+            return list;
         }
     }
 }

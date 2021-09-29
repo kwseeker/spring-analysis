@@ -195,8 +195,14 @@ public class AppConfig {
 
 参考 `ConfigurationClassParser$parse(Set<BeanDefinitionHolder> configCandidates)`方法。
 
-如果getImportGroup返回自定义Group, 会调用自定义Group的process方法加载BeanDefinition; 
-如果getImportGroup返回 null, 会调用DefaultDeferredImportSelectorGroup的process方法, 即调用selectImports。
+> DeferredImportSelector重要特征：
+>
+> 如果getImportGroup返回自定义Group, 会调用自定义Group的process方法加载BeanDefinition; 
+> 如果getImportGroup返回 null, 会调用DefaultDeferredImportSelectorGroup的process方法, 即调用selectImports。
+>
+> DeferredImportSelectors是在导入的所有其他配置类（@Bean、@Import导入的@Component、配置类、ImportSelector等）都处理完才处理的（源码中可以看到碰到DeferredImportSelector先把它存到一个LinkedList容器了，最后在processDeferredImportSelectors中处理，不过如果）。
+>
+> DeferredImportSelector 相对于其他配置组件的导入处理流程多了排序、分组归类,  同一分组只有排序最靠前的Bean会被加入Map<Object, DeferredImportSelectorGrouping> groupings (这个很重要)。
 
 具体处理流程：
 
@@ -235,7 +241,7 @@ public void parse(Set<BeanDefinitionHolder> configCandidates) {
 @Import 导入的类的处理
 
 ```java
-//ConfigurationClassParser
+//ConfigurationClassParser.parse()的核心方法
 private void processImports(ConfigurationClass configClass, ConfigurationClassParser.SourceClass currentSourceClass, Collection<ConfigurationClassParser.SourceClass> importCandidates, boolean checkForCircularImports) {
     if (!importCandidates.isEmpty()) {
         if (checkForCircularImports && this.isChainedImportOnStack(configClass)) {
@@ -295,6 +301,8 @@ private void processImports(ConfigurationClass configClass, ConfigurationClassPa
 ```
 
 初步处理之后 configurationClasses 数据:
+
+将配置类预处理了下，存储到了configurationClasses 这个LinkedHashMap中。
 
 ```java
 configurationClasses = {LinkedHashMap@1416}  size = 3
@@ -357,47 +365,72 @@ DeferredImportSelector 处理流程（由下面代码可见，DeferredImportSele
 
 ```java
 private void processDeferredImportSelectors() {
-    List<ConfigurationClassParser.DeferredImportSelectorHolder> deferredImports = this.deferredImportSelectors;
+    List<DeferredImportSelectorHolder> deferredImports = this.deferredImportSelectors;
     this.deferredImportSelectors = null;
-    if (deferredImports != null) {
-        //排序 TODO
-        deferredImports.sort(DEFERRED_IMPORT_COMPARATOR);
-        Map<Object, ConfigurationClassParser.DeferredImportSelectorGrouping> groupings = new LinkedHashMap();
-        Map<AnnotationMetadata, ConfigurationClass> configurationClasses = new HashMap();
-        Iterator var4 = deferredImports.iterator();
-		//遍历DeferredImportSelector，进行分组归类 TODO
-        while(var4.hasNext()) {
-            ConfigurationClassParser.DeferredImportSelectorHolder deferredImport = (ConfigurationClassParser.DeferredImportSelectorHolder)var4.next();
-            Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
-            ConfigurationClassParser.DeferredImportSelectorGrouping grouping = (ConfigurationClassParser.DeferredImportSelectorGrouping)groupings.computeIfAbsent(group == null ? deferredImport : group, (key) -> {
-                return new ConfigurationClassParser.DeferredImportSelectorGrouping(this.createGroup(group));
-            });
-            grouping.add(deferredImport);
-            configurationClasses.put(deferredImport.getConfigurationClass().getMetadata(), deferredImport.getConfigurationClass());
-        }
-		//
-        var4 = groupings.values().iterator();
-        while(var4.hasNext()) {
-            ConfigurationClassParser.DeferredImportSelectorGrouping grouping = (ConfigurationClassParser.DeferredImportSelectorGrouping)var4.next();
-            grouping.getImports().forEach((entry) -> {
-                ConfigurationClass configurationClass = (ConfigurationClass)configurationClasses.get(entry.getMetadata());
+    if (deferredImports == null) {
+        return;
+    }
 
-                try {
-                    //递归
-                    this.processImports(configurationClass, this.asSourceClass(configurationClass), this.asSourceClasses(entry.getImportClassName()), false);
-                } catch (BeanDefinitionStoreException var5) {
-                    throw var5;
-                } catch (Throwable var6) {
-                    throw new BeanDefinitionStoreException("Failed to process import candidates for configuration class [" + configurationClass.getMetadata().getClassName() + "]", var6);
-                }
-            });
-        }
+    //排序
+    //LinkedList的排序：先转为数组，然后使用Arrays.sort()对数组排序，最后再串起来
+    //DEFERRED_IMPORT_COMPARATOR排序规则（详见AnnotationAwareOrderComparator）：
+    //1）是否实现了PriorityOrdered接口，实现此接口的预先级比没有实现的高；
+    //2）如果两者都实现了或者都没有实现接口，如果是Class实例的话，查看类上是否有注解@Order，有的话返回value;没有再看是否有@Priority注解，
+    //	如果是Method实例的话，查看@Order的值，
+    //  如果是AnnotatedElement实现类实例的话查找@Order的值
+    // 	其他也是查找先@Order的值，没有再查@Priority的值
+    //  用查到的值进行排序
+    deferredImports.sort(DEFERRED_IMPORT_COMPARATOR);
 
+    //分组归类
+    //查看DeferredImportSelectorHolder的分组是否存在（没有自定义分组的话就把DeferredImportSelectorHolder实例作为分组键值），
+    //不存在则创建一个分组并加入配置DeferredImportSelectorHolder
+    //由此可见同一个分组只有排序靠前的能否保存到分组里面
+    Map<Object, DeferredImportSelectorGrouping> groupings = new LinkedHashMap<>();
+    Map<AnnotationMetadata, ConfigurationClass> configurationClasses = new HashMap<>();
+    for (DeferredImportSelectorHolder deferredImport : deferredImports) {
+        Class<? extends Group> group = deferredImport.getImportSelector().getImportGroup();
+        //不存在才会被加入，没有自定义分组（通常是Xxx.class），将DeferredImportSelectorHolder实例作为分组
+        DeferredImportSelectorGrouping grouping = groupings.computeIfAbsent(
+            (group == null ? deferredImport : group),
+            (key) -> new DeferredImportSelectorGrouping(createGroup(group)));
+        grouping.add(deferredImport);
+        configurationClasses.put(deferredImport.getConfigurationClass().getMetadata(),
+                                 deferredImport.getConfigurationClass());
+    }
+    //遍历分组，依次加载每个分组导入的配置类（！！！ 由此可见同一分组中排在第一的配置类才会被加载）
+    for (DeferredImportSelectorGrouping grouping : groupings.values()) {
+        //getImports() 先后调用了分组中的process()方法和selectImports()方法，
+        //最终返回Group.Entry的List
+        //然后再遍历List中的Entry的内容，递归加载里面的配置类
+        grouping.getImports().forEach((entry) -> {
+            ConfigurationClass configurationClass = configurationClasses.get(
+                entry.getMetadata());
+            try {
+                //递归
+                processImports(configurationClass, asSourceClass(configurationClass),
+                               asSourceClasses(entry.getImportClassName()), false);
+            }
+            catch (BeanDefinitionStoreException ex) {
+                throw ex;
+            }
+            catch (Throwable ex) {
+                throw new BeanDefinitionStoreException(
+                    "Failed to process import candidates for configuration class [" +
+                    configurationClass.getMetadata().getClassName() + "]", ex);
+            }
+        });
     }
 }
 ```
 
-还没完，ConfigurationClass List 怎么处理的？
+> 即同一个分组只有第一个UserServiceDeferredImportSelector中的配置类会被加入`Map<Object, DeferredImportSelectorGrouping> groupings`；也即只有同一分组中排在第一的配置类才会被加载。
+>
+> 同时不同分组之间配置类的导入互不影响。
+
+
+
+还没完，configurationClasses 怎么处理的？
 
 TODO
 
