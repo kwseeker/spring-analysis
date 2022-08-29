@@ -14,6 +14,7 @@
     <module>utils</module>
     <module>spring-javaconfig</module>
     <module>java-base</module>
+    <module>spring-annotation</module>
   </modules>
   <name>spring-analysis</name>
 
