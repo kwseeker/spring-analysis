@@ -69,6 +69,26 @@ public class MainApplicationTest {
         Assert.assertEquals("URL", url);
     }
 
+    /**
+     * 对象默认的hashCode()就是取的identityHashCode(), JDK8默认使用线程状态通过 Marsaglia's xor-shift 在首次使用使用identity hash code时计算得到；
+     * 即JDK8默认的hashCode()和对象内存中的地址没有关系。
+     * 特点是生成速度更快占用空间更少。
+     * 由于 identityHashCode 可能存在hash冲突，所以两个对象的 identityHashCode 相等并不能确保两个对象一定相等，但是 identityHashCode 不相等可以确保两个对象一定不相等。
+     * 作用：加速对象不等判断，先通过identityHashCode判断如果不相等则对象一定不想等，相等的话再通过“==”判断，identityHashCode相等判断币比对象“==”判断性能高的多
+     */
+    @Test
+    public void testGenerateIdentityHexString() {
+        Object obj = new Object();
+        int ihc = System.identityHashCode(obj);
+        System.out.println(ihc);
+        System.out.println(obj.hashCode());
+        String identity = Integer.toHexString(System.identityHashCode(ihc));
+        System.out.println(identity);
+        //String 重写了Object的hashCode()方法
+        String strObj = "hello";
+        System.out.println(System.identityHashCode(strObj) + "---" + strObj.hashCode());
+    }
+
     public boolean isPattern(String path) {
         return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
     }

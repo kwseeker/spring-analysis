@@ -9,8 +9,10 @@ public class MainApplication {
         //ApplicationContext context = new AnnotationConfigApplicationContext("./");  //类扫描成功, classpath*:///**/*.class
         //ApplicationContext context = new AnnotationConfigApplicationContext("//");  //类扫描成功, classpath*:///**/*.class
         //ApplicationContext context = new AnnotationConfigApplicationContext(".");   //类扫描失败, "///"（classpath*:////**/*.class） "/"(classpath*://**/*.class) 都是失败
-        ApplicationContext context = new AnnotationConfigApplicationContext("top.kwseeker.spring.annotation.anno01");  //类扫描成功, classpath*:top/kwseeker/spring/annotation/anno01/**/*.class
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("top.kwseeker.spring.annotation.anno01");  //类扫描成功, classpath*:top/kwseeker/spring/annotation/anno01/**/*.class
         BizService bizService = context.getBean(BizService.class);
         bizService.doBiz();
+
+        context.getBeanFactory().registerSingleton("object", new Object());
     }
 }
