@@ -75,6 +75,12 @@ public class MainApplicationTest {
      * 特点是生成速度更快占用空间更少。
      * 由于 identityHashCode 可能存在hash冲突，所以两个对象的 identityHashCode 相等并不能确保两个对象一定相等，但是 identityHashCode 不相等可以确保两个对象一定不相等。
      * 作用：加速对象不等判断，先通过identityHashCode判断如果不相等则对象一定不想等，相等的话再通过“==”判断，identityHashCode相等判断币比对象“==”判断性能高的多
+     * 回顾：
+     *　重写equals方法时同时也要重写hashcode方法；
+     *  原因：Object规范有３条约定：其中第二条要求：如果两个对象根据equals(Object)方法比较是相等的，那么在两个对象上调用hashCode就必须产生的结果是相同的整数。
+     *  如果不遵循这条约定有什么后果？比如自行实现MyString, 像String一样重写了equals()但是没重写hashCode(),会发现下面str1和str2都能插入HashMap等容器（保存在Hash桶不同的索引位置），而期望是只插入一次。
+     *  MyString str1 = new MyString("Hi");
+     *  MyString str2 = new MyString("Hi");
      */
     @Test
     public void testGenerateIdentityHexString() {
