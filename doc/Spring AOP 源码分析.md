@@ -204,6 +204,42 @@ int sum = calculate.add(1, 1);
 
 
 
+## 那年那些坑
+
++ **Controller上加@AfterRuturning后报404**
+
+  应该是加切面后因为代理破坏了路由和处理器的映射。
+
+  具体可能原因：
+
+  **1）**Controller实现了接口，接口上没有@Controller相关注解，Controller是JDK代理对象所以也没有@Controller相关注解，导致Spring不认为它是Controller; 
+
+  **2）**使用了JDK动态代理（这种情况前提是Controller实现了接口），Spring处理JDK动态代理AOP不会像CGLIB AOP一样，先通过`ClassUtils.getUserClass(handlerType);`来获取真实对象, 然后`selectMethods`查找方法建立映射。
+
+  但是我们项目中和上面情况不一样，还待新建个测试项目，调试下。
+
+  TODO
+
+  !!! 这些个引入AOP的方式的区别
+
+  ```
+  <aop:aspectj-autoproxy/>
+  <bean class="org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator" />
+  @EnableAspectJAutoProxy
+  spring-boot-starter-aop
+  ```
+
+  
+
++ **Controller中包含private方法添加切面后报异常**
+
++ **动态代理依赖注入的问题**
+
++ 参考资料
+  [听说 Spring AOP 有坑？那就来踩一踩](https://cloud.tencent.com/developer/article/1779116)
+
+  
+
 ## JDK动态代理 & CGLib动态代理
 
 两者都使用到字节码编程。
@@ -217,3 +253,4 @@ CGLib则是使用ASM框架实现的，读取被代理类的class文件，对clas
 > **CGLib动态代理是继承机制**，CGLib动态代理类完全复制了被代理类的功能，就像一个增强的克隆体。业务执行和被代理类完全无关。
 
 所以jdk动态代理的方式创建代理对象效率较高，执行效率较低，cglib创建效率较低，执行效率高。
+
