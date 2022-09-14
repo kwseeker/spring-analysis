@@ -40,3 +40,5 @@ This allows for adding further bean definitions before the next post-processing 
 
 TODO
 
+mergedBeanDefinitions的作用？
+
