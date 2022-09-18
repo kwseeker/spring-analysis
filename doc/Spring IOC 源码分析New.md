@@ -4,7 +4,7 @@
 
 参考 graph/AnnotationConfigApplicationContext.drawio。
 
-此markdown文件只是辅助看流程图的（因为有些内容不便在流程图中展示）。
+此markdown文件只是辅助看流程图的备注内容（因为有些内容不便在流程图中展示）。
 
 
 
@@ -41,4 +41,8 @@ This allows for adding further bean definitions before the next post-processing 
 TODO
 
 mergedBeanDefinitions的作用？
+
+
+
+# NamedThreadLocal
 
