@@ -46,3 +46,21 @@ mergedBeanDefinitions的作用？
 
 # NamedThreadLocal
 
+就这？还是原生ThreadLocal。
+
+```java
+public class NamedThreadLocal<T> extends ThreadLocal<T> {
+
+   private final String name;
+
+   public NamedThreadLocal(String name) {
+      Assert.hasText(name, "Name must not be empty");
+      this.name = name;
+   }
+
+   @Override
+   public String toString() {
+      return this.name;
+   }
+}
+```
