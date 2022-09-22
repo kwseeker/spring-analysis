@@ -3,6 +3,7 @@ package top.kwseeker.spring.transaction.tx;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -28,6 +29,8 @@ public class SpringTransactionExample {
         final TransactionTemplate template = new TransactionTemplate();
         //设置事务管理器
         template.setTransactionManager(new DataSourceTransactionManager(ds));
+        //其他配置
+        //template.setIsolationLevel(TransactionDefinition.ISOLATION_READ_COMMITTED);
 
         template.execute(new TransactionCallback<Object>() {
             @Override
