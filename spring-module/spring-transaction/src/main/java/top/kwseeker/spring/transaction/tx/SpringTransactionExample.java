@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * 编程式事务
@@ -50,24 +51,25 @@ public class SpringTransactionExample {
                         prepare.setString(1, "aaa");
                         prepare.executeUpdate();
                         //模拟运行时异常
-                        //throw new RuntimeException("test");
+                        throw new RuntimeException("test");
                     }
-                //} catch (SQLException e) {
-                //    e.printStackTrace();
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     e.printStackTrace();
-                    System.out.println("更新失败");
-                    if(savePoint != null) {
-                        //回退到保存点
-                        System.out.println("回退到保存点");
-                        status.rollbackToSavepoint(savePoint);
-                    } else {
-                        //完全回退
-                        System.out.println("完全回退");
-                        status.setRollbackOnly();
-                    }
+                    throw new RuntimeException(e);
+                //} catch (Exception e) {
+                //    e.printStackTrace();
+                //    System.out.println("更新失败");
+                //    if(savePoint != null) {
+                //        //回退到保存点
+                //        System.out.println("回退到保存点");
+                //        status.rollbackToSavepoint(savePoint);
+                //    } else {
+                //        //完全回退
+                //        System.out.println("完全回退");
+                //        status.setRollbackOnly();
+                //    }
                 }
-                return null;
+                //return null;
             }
         });
     }
