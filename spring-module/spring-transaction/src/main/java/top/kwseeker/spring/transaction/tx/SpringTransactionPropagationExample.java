@@ -16,7 +16,7 @@ import java.sql.SQLException;
 /**
  * 测试事务传播行为
  */
-public class SpringNestedTransactionExample {
+public class SpringTransactionPropagationExample {
 
     private static String url = "jdbc:mysql://localhost:3306/spring-tx?useSSL=false";
     private static String user = "root";
@@ -73,8 +73,8 @@ public class SpringNestedTransactionExample {
                     prepare.executeUpdate();
                     System.out.println("inner update done");
                     //模拟异常触发回滚, 也可以通过 status.setRollbackOnly(); 设置回滚标志触发后续回滚
-                    throw new RuntimeException("模拟异常");
-                    //status.setRollbackOnly();
+                    //throw new RuntimeException("模拟异常");
+                    status.setRollbackOnly();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
