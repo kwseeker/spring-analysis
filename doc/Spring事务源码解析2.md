@@ -85,3 +85,71 @@ public interface TransactionSynchronization extends Flushable {
 }
 ```
 
+
+
+## 关于只读事务
+
+### 配置事务为只读
+
+```java
+ <tx:method name="search*" read-only="true" /> 
+ @Transactional(readOnly = true)
+ transactionTemplate.setReadOnly(true);	//对应读写事务：SET GLOBAL TRANSACTION READ WRITE;
+```
+
+看源码（参考流程图）可以看到就是执行了
+
+```java
+stmt.executeUpdate("SET TRANSACTION READ ONLY");
+```
+
+使用 START TRANSACTION READ ONLY 语句启动只读事务。在这种情况下，尝试对数据库（对于 InnoDB、MyISAM 或其他类型的表）进行更改会导致错误。不过仍然可以在只读事务中更改特定于会话的临时表，或发出锁定查询，因为这些更改和锁定对任何其他事务都不可见。
+
+可以用来优化InnoDB表上查询事务创建的效率，并可以提供非锁定查询的性能。
+
+只读事务对比于读写事务只是执行效率上的优化。
+
+实际中**使用只读事务更多的是强调“事务”而不是“只读”**，比如有些场景，希望多次查询过程中不要受到第三方事务更新影响，就可以为这个“多次查询”添加上只读事务（添加读写事务也是可以的，不过只是查询为何不用性能更好的只读事务呢）。参考测试Demo: SpringReadOnlyTransactionExample。
+
+
+
+## 事务失效问题
+
++ **事务应用在非public方法上**
+
+  `TransactionInterceptor` （事务拦截器）在目标方法执行前后进行拦截,`DynamicAdvisedInterceptor`（CglibAopProxy 的内部类）的 intercept 方法或 `JdkDynamicAopProxy` 的 invoke 方法会间接调用 `AbstractFallbackTransactionAttributeSource`的 `computeTransactionAttribute` 方法，获取Transactional 注解的事务配置信息。
+
+  ```java
+  protected TransactionAttribute computeTransactionAttribute(Method method,
+      Class<?> targetClass) {
+          // Don't allow no-public methods as required.
+          if (allowPublicMethodsOnly() && !Modifier.isPublic(method.getModifiers())) {
+          return null;
+          }
+  }
+  ```
+
++ **数据库本身不支持事务**
+
+  如果MySQL配置使用表锁，事务同样会失效（MySQL事务是针对行锁的）
+
++ **方法内部调用同一个类中其他＠Transactial修饰的方法导致事务失效**
+
+  以外部方法为准，即使内部调了一个@Transactional方法，但是生成代理类的时候并不会为外部方法添加事务控制增强。
+
+  解决方法:
+
+  1) 在没有@Transactional的方法上添加事务，然后另一个方法会使用当前方法的代理对象；
+
+  2) 当前方法不加事务注解，手动获取当前类的代理对象，通过代理对象调用另一个方法。
+
++ **异常在事务方法中被捕获**
+
++ **配置不正确**
+
+  + 标签`<tx:advice>`中切点配置不正确
+
+  + 异常配置不正确
+
+    比如配置rollbackFor针对某个异常才回滚，那么其他的异常事务都失效。
+
