@@ -5,6 +5,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PreDestroy;
+
 @Data
 public class OuterBean implements InitializingBean, DisposableBean, BeanNameAware, BeanFactoryAware, BeanClassLoaderAware {
 
@@ -40,6 +42,11 @@ public class OuterBean implements InitializingBean, DisposableBean, BeanNameAwar
     @Override
     public void destroy() throws Exception {
         System.out.println("call DisposableBean destroy()...");
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("call preDestroy()...");
     }
 
     @Override
