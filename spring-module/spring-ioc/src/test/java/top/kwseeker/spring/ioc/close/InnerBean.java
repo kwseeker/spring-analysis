@@ -1,4 +1,4 @@
-package top.kwseeker.spring.ioc.release;
+package top.kwseeker.spring.ioc.close;
 
 import org.springframework.stereotype.Component;
 

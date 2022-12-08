@@ -1,4 +1,4 @@
-package top.kwseeker.spring.ioc.release;
+package top.kwseeker.spring.ioc.close;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -10,7 +10,7 @@ public class OuterBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (beanName.equals("outerBean")) {
-            System.out.println("call postProcessBeforeInitialization()...");
+            System.out.println("call OuterBeanPostProcessor postProcessBeforeInitialization()...");
         }
         return bean;
     }
@@ -18,7 +18,7 @@ public class OuterBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (beanName.equals("outerBean")) {
-            System.out.println("call postProcessAfterInitialization()...");
+            System.out.println("call OuterBeanPostProcessor postProcessAfterInitialization()...");
         }
         return bean;
     }

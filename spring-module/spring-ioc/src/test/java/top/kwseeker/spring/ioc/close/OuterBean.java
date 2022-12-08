@@ -1,4 +1,4 @@
-package top.kwseeker.spring.ioc.release;
+package top.kwseeker.spring.ioc.close;
 
 import lombok.Data;
 import org.springframework.beans.BeansException;
@@ -23,42 +23,42 @@ public class OuterBean implements InitializingBean, DisposableBean, BeanNameAwar
 
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
-        System.out.println("call BeanClassLoaderAware setBeanClassLoader()...");
+        System.out.println("call OuterBean BeanClassLoaderAware setBeanClassLoader()...");
         this.classLoader = classLoader;
     }
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        System.out.println("call BeanFactoryAware setBeanFactory()...");
+        System.out.println("call OuterBean BeanFactoryAware setBeanFactory()...");
         this.beanFactory = beanFactory;
     }
 
     @Override
     public void setBeanName(String name) {
-        System.out.println("call BeanNameAware setBeanName()...");
+        System.out.println("call OuterBean BeanNameAware setBeanName()...");
         this.beanName = name;
     }
 
     @Override
     public void destroy() throws Exception {
-        System.out.println("call DisposableBean destroy()...");
+        System.out.println("call OuterBean DisposableBean destroy()...");
     }
 
     @PreDestroy
     public void preDestroy() {
-        System.out.println("call preDestroy()...");
+        System.out.println("call OuterBean preDestroy()...");
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("call InitializingBean afterPropertiesSet()...");
+        System.out.println("call OuterBean InitializingBean afterPropertiesSet()...");
     }
 
     private void initMethod() {
-        System.out.println("call init()...");
+        System.out.println("call OuterBean init()...");
     }
 
     private void destroyMethod() {
-        System.out.println("call destroyMethod()...");
+        System.out.println("call OuterBean destroyMethod()...");
     }
 }
