@@ -119,17 +119,59 @@ org.springframework.dao		//spring DAO层通用定义
 
 ### 数据库连接控制
 
+- [Using `DataSource`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-datasource)
 
+  Spring通过DataSource获取数据库的连接。DataSource是JDBC规范的一部分，是一个广义的连接工厂。它允许容器或框架对应用程序代码隐藏连接池和事务管理问题。
+
+  当您使用Spring的JDBC层时，可以从JNDI获得数据源，也可以使用第三方提供的连接池实现配置自己的数据源。
+
+  DriverManagerDataSource和SimpleDriverDataSource这些变体不提供池，并且当对一个连接发出多个请求时性能很差。
+
+- [Using `DataSourceUtils`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-DataSourceUtils)
+
+  DataSourceUtils类是一个方便而强大的辅助类，它提供了静态方法来从JNDI获取连接，并在必要时关闭连接。它支持线程绑定连接，例如DataSourceTransactionManager。
+
+- [Implementing `SmartDataSource`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-SmartDataSource)
+
+  SmartDataSource接口应该由能够提供关系数据库连接的类实现。它扩展了DataSource接口，让使用它的类**查询在给定操作之后是否应该关闭连接**。当知道需要重用某个连接时，这种用法是有效的。
+
+- [Extending `AbstractDataSource`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-AbstractDataSource)
+
+- [Using `SingleConnectionDataSource`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-SingleConnectionDataSource)
+
+  SingleConnectionDataSource类是SmartDataSource接口的实现，该接口封装了一个在每次使用后都不会关闭的连接。它不支持多线程。
+
+  SingleConnectionDataSource主要是一个测试类。它通常能够与简单的JNDI环境一起在应用程序服务器之外轻松地测试代码。与DriverManagerDataSource相比，它总是重用相同的连接，避免了过多的物理连接创建。
+
+- [Using `DriverManagerDataSource`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-DriverManagerDataSource)
+
+  DriverManagerDataSource类是标准DataSource接口的实现，该接口通过bean属性配置普通JDBC驱动程序，并每次返回一个新的Connection。
+
+- [Using `TransactionAwareDataSourceProxy`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-TransactionAwareDataSourceProxy)
+
+  TransactionAwareDataSourceProxy是目标数据源的代理。代理包装以DataSource为目标，以添加spring管理事务的感知。
+
+- [Using `DataSourceTransactionManager`](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#jdbc-DataSourceTransactionManager)
+
+  DataSourceTransactionManager类是一个用于单个JDBC数据源的PlatformTransactionManager实现。它将来自指定数据源的JDBC连接绑定到当前执行的线程，可能允许每个数据源有一个线程连接。
+
+  DataSourceTransactionManager类支持自定义隔离级别和超时，可作为适当的JDBC语句查询超时用。为了支持后者，应用程序代码必须使用JdbcTemplate或为每个创建的语句调用DataSourceUtils.applyTransactionTimeout(..)方法。
+
+  在单数据源的情况下，可以使用这个实现而不是JtaTransactionManager，因为它不需要容器支持JTA。在两者之间切换只是一个配置问题，前提是坚持使用规定的连接查找模式。JTA不支持自定义隔离级别。
 
 ### JDBC批量操作
 
+通过实现特殊接口BatchPreparedStatementSetter的两个方法，并将该实现作为batchUpdate方法调用中的第二个参数传入，可以完成JdbcTemplate批处理。
 
+如果从流或文件读取数据进行批量操作，则可能有预订的批处理大小，但最后一批批处理的大小可能没有达到指定的大小。在这种情况下，可以使用InterruptibleBatchPreparedStatementSetter接口，该接口允许在输入源耗尽时中断批处理。isBatchExhausted方法允许您发出批处理结束的信号（然后触发最后一批批处理操作）。
 
 ### 使用SimpleJdbc简化JDBC操作
 
 ### 将JDBC操作建模为Java对象
 
 ### 参数和结果处理的常见问题
+
+
 
 ### 嵌入式数据库的支持
 
