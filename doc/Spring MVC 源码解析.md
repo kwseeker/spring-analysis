@@ -143,3 +143,29 @@ this.mappingRegistry = {AbstractHandlerMethodMapping$MappingRegistry@8354}
  readWriteLock = {ReentrantReadWriteLock@8855} "java.util.concurrent.locks.ReentrantReadWriteLock@4b51759[Write locks = 0, Read locks = 1]"
  this$0 = {RequestMappingHandlerMapping@7362} 
 ```
+
+##### 最终获取的处理器对象
+
+即HandlerExecutionChain对象，
+
+```verilog
+mappedHandler = {HandlerExecutionChain@10182} "HandlerExecutionChain with [top.kwseeker.spring.mvc.AnnotationBasedController#sayHello(String)] and 2 interceptors"
+ handler = {HandlerMethod@10156} "top.kwseeker.spring.mvc.AnnotationBasedController#sayHello(String)"
+  bean = {AnnotationBasedController@4679} 
+  beanFactory = {DefaultListableBeanFactory@4802} "org.springframework.beans.factory.support.DefaultListableBeanFactory@47552116: defining beans [annotationBasedController,parameterCaseController,org.springframework.context.annotation.internalConfigurationAnnotationProcessor,org.springframework.context.annotation.internalAutowiredAnnotationProcessor,org.springframework.context.annotation.internalCommonAnnotationProcessor,org.springframework.context.event.internalEventListenerProcessor,org.springframework.context.event.internalEventListenerFactory,mvcContentNegotiationManager,org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping,mvcCorsConfigurations,org.springframework.format.support.FormattingConversionServiceFactoryBean#0,org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter,mvcUriComponentsContributor,org.springframework.web.servlet.handler.MappedInterceptor#0,org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver#0,org.springframework.web.ser"
+  messageSource = {XmlWebApplicationContext@4724} "WebApplicationContext for namespace 'dispatcherServlet-servlet', started on Thu May 25 14:31:40 CST 2023"
+  beanType = {Class@3329} "class top.kwseeker.spring.mvc.AnnotationBasedController"
+  method = {Method@4684} "public java.lang.String top.kwseeker.spring.mvc.AnnotationBasedController.sayHello(java.lang.String)"
+  bridgedMethod = {Method@4684} "public java.lang.String top.kwseeker.spring.mvc.AnnotationBasedController.sayHello(java.lang.String)"
+  parameters = {MethodParameter[1]@4803} 
+  responseStatus = null
+  responseStatusReason = null
+  resolvedFromHandlerMethod = {HandlerMethod@4805} "top.kwseeker.spring.mvc.AnnotationBasedController#sayHello(String)"
+  interfaceParameterAnnotations = null
+  description = "top.kwseeker.spring.mvc.AnnotationBasedController#sayHello(String)"
+ interceptorList = {ArrayList@10224}  size = 2
+  0 = {ConversionServiceExposingInterceptor@10226} 
+  1 = {ResourceUrlProviderExposingInterceptor@10227} 
+ interceptorIndex = -1
+```
+
