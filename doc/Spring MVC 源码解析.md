@@ -144,6 +144,35 @@ this.mappingRegistry = {AbstractHandlerMethodMapping$MappingRegistry@8354}
  this$0 = {RequestMappingHandlerMapping@7362} 
 ```
 
+##### @RequestMapping属性与匹配条件
+
+**@RequestMapping属性**：
+
+- **value (alias path)**: URL 路径，可以为数组。例如： `@RequestMapping(value = "/orders")` 或者 `@RequestMapping(value = {"/orders", "/billings"})`。
+- **method**: 用于指定 HTTP 请求方法，可以是 GET、POST、PUT、DELETE 等，也可以是 RequestMethod 枚举的值。例如： `@RequestMapping(value = "/orders", method = RequestMethod.GET)`。
+- **params**: 用于指定 HTTP 请求的参数，可以与参数值一起使用。例如：`@RequestMapping(value = "/orders", params = {"id=1", "type=book"})`。
+- **headers**: 用于指定 HTTP 请求的 headers，可以与参数值一起使用。例如：`@RequestMapping(value = "/orders", headers = "api-version=1")`。
+- **consumes**: 用于指定请求的 MIME 类型（Content-Type），例如：`@RequestMapping(value = "/orders", consumes = {"application/json", "application/xml"})`。
+- **produces**: 用于指定返回值可接受的 MIME 类型（Accept），例如：`@RequestMapping(value = "/orders", produces = {"application/json", "application/xml"})`。
+
+**getHandler() 过程中的匹配条件**：
+
+对应  RequestMappingInfo 类的属性，用作查询与请求适配的Handler方法时进行过滤。
+
+```java
+private final String name;
+private final PathPatternsRequestCondition pathPatternsCondition;
+//路由匹配规则(Set集合)， 如：[/rb/user]
+private final PatternsRequestCondition patternsCondition;
+//HTTP请求类型匹配规则，如：GET
+private final RequestMethodsRequestCondition methodsCondition;
+private final ParamsRequestCondition paramsCondition;
+private final HeadersRequestCondition headersCondition;
+private final ConsumesRequestCondition consumesCondition;
+private final ProducesRequestCondition producesCondition;
+private final RequestConditionHolder customConditionHolder;
+```
+
 ##### 最终获取的处理器对象
 
 即HandlerExecutionChain对象，
